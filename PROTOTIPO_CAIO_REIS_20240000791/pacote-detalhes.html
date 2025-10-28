@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Praias Paradisíacas de Maragogi - Pacote completo com hospedagem e passeios">
+  <title>Praias de Maragogi - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">✈️</div>
+          <span>TravelFlow</span>
+        </a>
+        
+        <nav class="nav">
+          <button class="menu-toggle" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          
+          <ul class="nav-menu">
+            <li><a href="index.html" class="nav-link">Início</a></li>
+            <li><a href="index.html#features" class="nav-link">Recursos</a></li>
+            <li><a href="index.html#packages" class="nav-link active">Pacotes</a></li>
+            <li><a href="index.html#contact" class="nav-link">Contato</a></li>
+            <li><a href="login.html" class="btn btn-outline btn-sm">Entrar</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Package Hero -->
+    <section style="padding: var(--spacing-3xl) 0; background-color: var(--bg-primary);">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav style="margin-bottom: var(--spacing-lg);">
+          <a href="index.html" style="color: var(--text-light);">Início</a>
+          <span style="color: var(--text-light);"> / </span>
+          <a href="index.html#packages" style="color: var(--text-light);">Pacotes</a>
+          <span style="color: var(--text-light);"> / </span>
+          <span>Praias de Maragogi</span>
+        </nav>
+
+        <div class="row">
+          <!-- Main Image -->
+          <div class="col-8">
+            <div style="width: 100%; aspect-ratio: 16/10; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; font-size: 5rem; color: white; margin-bottom: var(--spacing-lg); position: relative;">
+              🏖️
+              <span style="position: absolute; top: var(--spacing-lg); right: var(--spacing-lg); background-color: var(--warning-color); color: white; padding: var(--spacing-sm) var(--spacing-lg); border-radius: var(--radius-full); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold);">
+                Promoção
+              </span>
+            </div>
+
+            <!-- Gallery -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md);">
+              <div style="aspect-ratio: 1; background: linear-gradient(135deg, #3b82f6, #06b6d4); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer;">🌊</div>
+              <div style="aspect-ratio: 1; background: linear-gradient(135deg, #06b6d4, #10b981); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer;">🐠</div>
+              <div style="aspect-ratio: 1; background: linear-gradient(135deg, #10b981, #f59e0b); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer;">🏝️</div>
+              <div style="aspect-ratio: 1; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer;">🌅</div>
+            </div>
+          </div>
+
+          <!-- Booking Card -->
+          <div class="col-4">
+            <div class="card" style="position: sticky; top: calc(var(--spacing-xl) + 70px);">
+              <div class="card-body">
+                <div style="margin-bottom: var(--spacing-lg);">
+                  <p style="color: var(--text-light); font-size: var(--font-size-sm); margin-bottom: var(--spacing-xs);">A partir de</p>
+                  <h2 style="color: var(--primary-color); font-size: var(--font-size-4xl); margin-bottom: var(--spacing-xs);">R$ 2.499</h2>
+                  <p style="color: var(--text-light); font-size: var(--font-size-sm);">por pessoa</p>
+                </div>
+
+                <div style="padding: var(--spacing-lg); background-color: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: var(--spacing-lg);">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-md);">
+                    <span style="color: var(--text-secondary);">📅 Duração</span>
+                    <strong>7 dias / 6 noites</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-md);">
+                    <span style="color: var(--text-secondary);">👥 Pessoas</span>
+                    <strong>2-4 pessoas</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);">✈️ Transporte</span>
+                    <strong>Aéreo incluso</strong>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-lg btn-block" style="margin-bottom: var(--spacing-md);" onclick="alert('Redirecionando para formulário de reserva...')">
+                  Reservar Agora
+                </button>
+
+                <a href="https://wa.me/5511999999999" class="btn btn-outline btn-block" target="_blank" rel="noopener noreferrer">
+                  💬 Falar no WhatsApp
+                </a>
+
+                <div style="margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid var(--border-color); text-align: center;">
+                  <p style="font-size: var(--font-size-sm); color: var(--text-light);">
+                    ✅ Cancelamento grátis até 7 dias antes<br>
+                    🔒 Pagamento seguro<br>
+                    📞 Suporte 24/7
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Package Details -->
+    <section style="padding: var(--spacing-3xl) 0; background-color: var(--bg-secondary);">
+      <div class="container">
+        <div class="row">
+          <div class="col-8">
+            <!-- Description -->
+            <div class="card" style="margin-bottom: var(--spacing-xl);">
+              <div class="card-body">
+                <h2 style="margin-bottom: var(--spacing-lg);">Sobre o Pacote</h2>
+                <p>Descubra as piscinas naturais mais lindas do Brasil! Maragogi, conhecida como o "Caribe Brasileiro", oferece águas cristalinas, recifes de corais e uma experiência inesquecível.</p>
+                <p>Este pacote completo inclui tudo que você precisa para aproveitar ao máximo sua viagem: passagens aéreas, hospedagem em hotel 4 estrelas à beira-mar, café da manhã e os principais passeios da região.</p>
+                <p>Prepare-se para mergulhar nas famosas Galés de Maragogi, relaxar em praias paradisíacas e criar memórias que durarão para sempre!</p>
+              </div>
+            </div>
+
+            <!-- Itinerary -->
+            <div class="card" style="margin-bottom: var(--spacing-xl);">
+              <div class="card-body">
+                <h2 style="margin-bottom: var(--spacing-lg);">📅 Itinerário</h2>
+                
+                <div style="border-left: 3px solid var(--primary-color); padding-left: var(--spacing-lg);">
+                  <div style="margin-bottom: var(--spacing-xl);">
+                    <h4 style="color: var(--primary-color);">Dia 1 - Chegada</h4>
+                    <p>Chegada em Maceió, transfer para Maragogi e check-in no hotel. Tarde livre para conhecer a praia em frente ao hotel.</p>
+                  </div>
+
+                  <div style="margin-bottom: var(--spacing-xl);">
+                    <h4 style="color: var(--primary-color);">Dia 2 - Galés de Maragogi</h4>
+                    <p>Passeio de catamarã até as famosas piscinas naturais. Mergulho com snorkel entre peixes coloridos e corais.</p>
+                  </div>
+
+                  <div style="margin-bottom: var(--spacing-xl);">
+                    <h4 style="color: var(--primary-color);">Dia 3 - Praia de Antunes</h4>
+                    <p>Dia na Praia de Antunes, considerada uma das mais bonitas do Brasil. Águas calmas e cristalinas.</p>
+                  </div>
+
+                  <div style="margin-bottom: var(--spacing-xl);">
+                    <h4 style="color: var(--primary-color);">Dia 4 - São Miguel dos Milagres</h4>
+                    <p>Passeio bate-volta para conhecer as piscinas naturais de São Miguel dos Milagres.</p>
+                  </div>
+
+                  <div style="margin-bottom: var(--spacing-xl);">
+                    <h4 style="color: var(--primary-color);">Dia 5 - Dia Livre</h4>
+                    <p>Dia livre para relaxar no hotel, fazer compras ou contratar passeios opcionais.</p>
+                  </div>
+
+                  <div style="margin-bottom: var(--spacing-xl);">
+                    <h4 style="color: var(--primary-color);">Dia 6 - Praia do Gunga</h4>
+                    <p>Passeio para a Praia do Gunga, com falésias coloridas e coqueirais.</p>
+                  </div>
+
+                  <div>
+                    <h4 style="color: var(--primary-color);">Dia 7 - Partida</h4>
+                    <p>Café da manhã, check-out e transfer para o aeroporto de Maceió.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Includes -->
+            <div class="row">
+              <div class="col-6">
+                <div class="card" style="margin-bottom: var(--spacing-xl);">
+                  <div class="card-body">
+                    <h3 style="margin-bottom: var(--spacing-lg);">✅ Incluído</h3>
+                    <ul style="list-style: none; padding: 0;">
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">✈️ Passagens aéreas ida e volta</li>
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">🏨 6 diárias em hotel 4 estrelas</li>
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">🍳 Café da manhã diário</li>
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">🚐 Transfers aeroporto-hotel-aeroporto</li>
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">🛥️ Passeio às Galés de Maragogi</li>
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">🤿 Equipamento de snorkel</li>
+                      <li style="padding: var(--spacing-sm) 0;">🛡️ Seguro viagem</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="card" style="margin-bottom: var(--spacing-xl);">
+                  <div class="card-body">
+                    <h3 style="margin-bottom: var(--spacing-lg);">❌ Não Incluído</h3>
+                    <ul style="list-style: none; padding: 0;">
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">🍽️ Almoço e jantar</li>
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">🍹 Bebidas</li>
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">🎫 Passeios opcionais</li>
+                      <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--border-light);">💰 Despesas pessoais</li>
+                      <li style="padding: var(--spacing-sm) 0;">💵 Taxas de embarque</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar Info -->
+          <div class="col-4">
+            <div class="card" style="margin-bottom: var(--spacing-xl);">
+              <div class="card-body">
+                <h3 style="margin-bottom: var(--spacing-lg);">📍 Informações</h3>
+                <div style="margin-bottom: var(--spacing-md);">
+                  <strong>Destino:</strong>
+                  <p style="margin-bottom: 0;">Maragogi, Alagoas</p>
+                </div>
+                <div style="margin-bottom: var(--spacing-md);">
+                  <strong>Saídas:</strong>
+                  <p style="margin-bottom: 0;">Quintas e sábados</p>
+                </div>
+                <div style="margin-bottom: var(--spacing-md);">
+                  <strong>Aeroporto:</strong>
+                  <p style="margin-bottom: 0;">Maceió (MCZ)</p>
+                </div>
+                <div>
+                  <strong>Idioma:</strong>
+                  <p style="margin-bottom: 0;">Português</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-info">
+              <strong>💡 Dica:</strong> Reserve com antecedência! Este é um dos nossos pacotes mais procurados.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>TravelFlow</h4>
+          <p>Sistema completo de gestão para agências de viagens.</p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Produto</h4>
+          <p><a href="index.html#features">Recursos</a></p>
+          <p><a href="index.html#packages">Pacotes</a></p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Empresa</h4>
+          <p><a href="#">Sobre Nós</a></p>
+          <p><a href="#">Contato</a></p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Suporte</h4>
+          <p><a href="#">Central de Ajuda</a></p>
+          <p><a href="#">FAQ</a></p>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2025 TravelFlow. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Buttons -->
+  <a href="https://wa.me/5511999999999" class="whatsapp-button" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+    💬
+  </a>
+  
+  <button class="chatbot-button" aria-label="Chatbot" onclick="alert('Chatbot: Olá! Posso ajudá-lo com informações sobre este pacote?')">
+    🤖
+  </button>
+
+  <script>
+    // Menu Toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

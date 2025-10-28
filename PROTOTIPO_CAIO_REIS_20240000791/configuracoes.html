@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Configurações - TravelFlow">
+  <title>Configurações - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✈️</div>
+          <span class="sidebar-logo-text">TravelFlow</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="pacotes.html" class="sidebar-link">
+              <span class="sidebar-icon">📦</span>
+              <span>Pacotes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="clientes.html" class="sidebar-link">
+              <span class="sidebar-icon">👥</span>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="reservas.html" class="sidebar-link">
+              <span class="sidebar-icon">🎫</span>
+              <span>Reservas</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="calendario.html" class="sidebar-link">
+              <span class="sidebar-icon">📅</span>
+              <span>Calendário</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="mensagens.html" class="sidebar-link">
+              <span class="sidebar-icon">💬</span>
+              <span>Mensagens</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="relatorios.html" class="sidebar-link">
+              <span class="sidebar-icon">📈</span>
+              <span>Relatórios</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="configuracoes.html" class="sidebar-link active">
+              <span class="sidebar-icon">⚙️</span>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="userInfo">
+          <div class="sidebar-user-avatar" id="userAvatar">U</div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name" id="userName">Usuário</span>
+            <span class="sidebar-user-role" id="userRole">Carregando...</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Menu">
+            ☰
+          </button>
+          
+          <h2 style="margin: 0; font-size: var(--font-size-xl);">Configurações</h2>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" aria-label="Notificações">
+            🔔
+            <span class="notification-badge">3</span>
+          </button>
+          <a href="login.html" class="topbar-icon-btn" aria-label="Sair" title="Sair">
+            🚪
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="settings-container">
+          <!-- Perfil -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <div class="settings-icon">👤</div>
+              <div>
+                <h2 class="settings-section-title">Perfil</h2>
+                <p class="settings-section-subtitle">Gerencie suas informações pessoais</p>
+              </div>
+            </div>
+
+            <div class="profile-avatar-section">
+              <div class="profile-avatar-large" id="profileAvatar">U</div>
+              <div>
+                <h3 id="profileName">Usuário</h3>
+                <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);" id="profileEmail">usuario@email.com</p>
+                <button class="btn btn-outline btn-sm" onclick="changeAvatar()">Alterar Foto</button>
+              </div>
+            </div>
+
+            <form id="profileForm">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Nome Completo</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Seu nome">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="email" placeholder="seu@email.com">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Telefone</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="(11) 99999-9999">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Cargo</label>
+                    <input type="text" class="form-control" id="position" placeholder="Gerente">
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            </form>
+          </div>
+
+          <!-- Segurança -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <div class="settings-icon">🔒</div>
+              <div>
+                <h2 class="settings-section-title">Segurança</h2>
+                <p class="settings-section-subtitle">Gerencie senha e autenticação</p>
+              </div>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Alterar Senha</h4>
+                <p>Última alteração: há 30 dias</p>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="changePassword()">Alterar</button>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Autenticação de Dois Fatores</h4>
+                <p>Adicione uma camada extra de segurança</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="twoFactor">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Sessões Ativas</h4>
+                <p>2 dispositivos conectados</p>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="manageSessions()">Gerenciar</button>
+            </div>
+          </div>
+
+          <!-- Notificações -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <div class="settings-icon">🔔</div>
+              <div>
+                <h2 class="settings-section-title">Notificações</h2>
+                <p class="settings-section-subtitle">Configure como deseja ser notificado</p>
+              </div>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Notificações por E-mail</h4>
+                <p>Receba atualizações importantes por e-mail</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="emailNotif" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Notificações Push</h4>
+                <p>Alertas em tempo real no navegador</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="pushNotif" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Resumo Diário</h4>
+                <p>Receba um resumo das atividades do dia</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="dailySummary">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Lembretes de Viagens</h4>
+                <p>Alertas 7 dias antes das viagens</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="tripReminders" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Agência -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <div class="settings-icon">🏢</div>
+              <div>
+                <h2 class="settings-section-title">Informações da Agência</h2>
+                <p class="settings-section-subtitle">Dados da sua empresa</p>
+              </div>
+            </div>
+
+            <form id="agencyForm">
+              <div class="form-group">
+                <label class="form-label">Nome da Agência</label>
+                <input type="text" class="form-control" id="agencyName" placeholder="TravelFlow Viagens">
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">CNPJ</label>
+                    <input type="text" class="form-control" id="cnpj" placeholder="00.000.000/0001-00">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Telefone Comercial</label>
+                    <input type="tel" class="form-control" id="businessPhone" placeholder="(11) 3000-0000">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Endereço</label>
+                <input type="text" class="form-control" id="address" placeholder="Rua, número, bairro">
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Cidade</label>
+                    <input type="text" class="form-control" id="city" placeholder="São Paulo">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select class="form-control" id="state">
+                      <option value="">Selecione</option>
+                      <option value="SP">São Paulo</option>
+                      <option value="RJ">Rio de Janeiro</option>
+                      <option value="MG">Minas Gerais</option>
+                      <!-- Outros estados -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            </form>
+          </div>
+
+          <!-- Preferências -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <div class="settings-icon">🎨</div>
+              <div>
+                <h2 class="settings-section-title">Preferências</h2>
+                <p class="settings-section-subtitle">Personalize sua experiência</p>
+              </div>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Idioma</h4>
+                <p>Português (Brasil)</p>
+              </div>
+              <select class="form-control" style="width: auto;" id="language">
+                <option value="pt-BR">Português (BR)</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+              </select>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Fuso Horário</h4>
+                <p>America/Sao_Paulo (GMT-3)</p>
+              </div>
+              <select class="form-control" style="width: auto;" id="timezone">
+                <option value="America/Sao_Paulo">São Paulo (GMT-3)</option>
+                <option value="America/New_York">Nova York (GMT-5)</option>
+                <option value="Europe/London">Londres (GMT+0)</option>
+              </select>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Modo Escuro</h4>
+                <p>Ativar tema escuro</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="darkMode">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Zona de Perigo -->
+          <div class="settings-section danger-zone">
+            <div class="settings-section-header">
+              <div class="settings-icon" style="background: var(--error-color);">⚠️</div>
+              <div>
+                <h2 class="settings-section-title" style="color: var(--error-color);">Zona de Perigo</h2>
+                <p class="settings-section-subtitle">Ações irreversíveis</p>
+              </div>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Exportar Dados</h4>
+                <p>Baixe todos os seus dados em formato JSON</p>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="exportData()">Exportar</button>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Desativar Conta</h4>
+                <p>Desative temporariamente sua conta</p>
+              </div>
+              <button class="btn btn-outline btn-sm" style="color: var(--error-color); border-color: var(--error-color);" onclick="deactivateAccount()">Desativar</button>
+            </div>
+
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <h4>Excluir Conta</h4>
+                <p>Exclua permanentemente sua conta e todos os dados</p>
+              </div>
+              <button class="btn btn-sm" style="background: var(--error-color); color: white;" onclick="deleteAccount()">Excluir Conta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Verificar autenticação
+    function checkAuth() {
+      const user = localStorage.getItem('travelflow_user');
+      if (!user) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      return JSON.parse(user);
+    }
+
+    // Carregar informações do usuário
+    function loadUserInfo() {
+      const user = checkAuth();
+      if (!user) return;
+
+      const name = user.name || user.email.split('@')[0];
+      const initials = name.substring(0, 2).toUpperCase();
+
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userRole').textContent = user.role === 'admin' ? 'Administrador' : 'Usuário';
+      document.getElementById('userAvatar').textContent = initials;
+
+      // Preencher formulário de perfil
+      document.getElementById('profileAvatar').textContent = initials;
+      document.getElementById('profileName').textContent = name;
+      document.getElementById('profileEmail').textContent = user.email;
+      document.getElementById('fullName').value = name;
+      document.getElementById('email').value = user.email;
+      document.getElementById('phone').value = user.telefone || '';
+      
+      if (user.agencia) {
+        document.getElementById('agencyName').value = user.agencia;
+      }
+    }
+
+    // Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Salvar perfil
+    document.getElementById('profileForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const user = checkAuth();
+      if (!user) return;
+
+      user.name = document.getElementById('fullName').value;
+      user.email = document.getElementById('email').value;
+      user.telefone = document.getElementById('phone').value;
+
+      localStorage.setItem('travelflow_user', JSON.stringify(user));
+      
+      alert('✓ Perfil atualizado com sucesso!');
+      loadUserInfo();
+    });
+
+    // Salvar agência
+    document.getElementById('agencyForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const user = checkAuth();
+      if (!user) return;
+
+      user.agencia = document.getElementById('agencyName').value;
+
+      localStorage.setItem('travelflow_user', JSON.stringify(user));
+      
+      alert('✓ Informações da agência atualizadas!');
+    });
+
+    // Funções de configuração
+    function changeAvatar() {
+      alert('📸 Alterar Foto\n\nEm produção, isso abriria:\n• Upload de imagem\n• Crop e ajuste\n• Preview antes de salvar');
+    }
+
+    function changePassword() {
+      const currentPassword = prompt('Digite sua senha atual:');
+      if (!currentPassword) return;
+
+      const newPassword = prompt('Digite a nova senha (mínimo 8 caracteres):');
+      if (!newPassword || newPassword.length < 8) {
+        alert('❌ A senha deve ter no mínimo 8 caracteres');
+        return;
+      }
+
+      const confirmPassword = prompt('Confirme a nova senha:');
+      if (newPassword !== confirmPassword) {
+        alert('❌ As senhas não coincidem');
+        return;
+      }
+
+      alert('✓ Senha alterada com sucesso!\n\nPor segurança, você será redirecionado para fazer login novamente.');
+      setTimeout(() => {
+        localStorage.removeItem('travelflow_user');
+        window.location.href = 'login.html';
+      }, 2000);
+    }
+
+    function manageSessions() {
+      alert('🖥️ Sessões Ativas\n\n1. Chrome - Windows (atual)\n   São Paulo, Brasil\n   Última atividade: agora\n\n2. Safari - iPhone\n   São Paulo, Brasil\n   Última atividade: há 2 horas\n\n[Encerrar outras sessões]');
+    }
+
+    function exportData() {
+      const user = checkAuth();
+      if (!user) return;
+
+      const data = {
+        user: user,
+        exportDate: new Date().toISOString(),
+        version: '1.0'
+      };
+
+      alert('📦 Exportando dados...\n\nSeus dados serão baixados em formato JSON.\n\nIncluindo:\n• Dados de perfil\n• Configurações\n• Histórico de atividades');
+      
+      console.log('Dados exportados:', data);
+    }
+
+    function deactivateAccount() {
+      if (confirm('⚠️ Desativar Conta\n\nTem certeza que deseja desativar sua conta?\n\nVocê poderá reativá-la fazendo login novamente.')) {
+        alert('✓ Conta desativada\n\nSua conta foi desativada temporariamente.\nPara reativar, basta fazer login novamente.');
+        localStorage.removeItem('travelflow_user');
+        window.location.href = 'login.html';
+      }
+    }
+
+    function deleteAccount() {
+      const confirmation = prompt('⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!\n\nTodos os seus dados serão permanentemente excluídos.\n\nDigite "EXCLUIR" para confirmar:');
+      
+      if (confirmation === 'EXCLUIR') {
+        alert('❌ Conta excluída\n\nSua conta e todos os dados foram permanentemente excluídos.\n\nSentiremos sua falta!');
+        localStorage.removeItem('travelflow_user');
+        window.location.href = 'index.html';
+      } else if (confirmation) {
+        alert('❌ Confirmação incorreta. Exclusão cancelada.');
+      }
+    }
+
+    // Salvar preferências ao mudar toggles
+    document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+      toggle.addEventListener('change', function() {
+        const setting = this.id;
+        const value = this.checked;
+        console.log(`Configuração ${setting} alterada para:`, value);
+        
+        // Salvar no localStorage
+        const settings = JSON.parse(localStorage.getItem('travelflow_settings') || '{}');
+        settings[setting] = value;
+        localStorage.setItem('travelflow_settings', JSON.stringify(settings));
+      });
+    });
+
+    // Carregar preferências salvas
+    function loadSettings() {
+      const settings = JSON.parse(localStorage.getItem('travelflow_settings') || '{}');
+      
+      Object.keys(settings).forEach(key => {
+        const element = document.getElementById(key);
+        if (element && element.type === 'checkbox') {
+          element.checked = settings[key];
+        }
+      });
+    }
+
+    // Logout
+    document.querySelectorAll('.topbar-icon-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if (btn.getAttribute('aria-label') === 'Sair') {
+          e.preventDefault();
+          if (confirm('Deseja realmente sair?')) {
+            localStorage.removeItem('travelflow_user');
+            window.location.href = 'login.html';
+          }
+        }
+      });
+    });
+
+    // Inicializar
+    loadUserInfo();
+    loadSettings();
+  </script>
+</body>
+</html>

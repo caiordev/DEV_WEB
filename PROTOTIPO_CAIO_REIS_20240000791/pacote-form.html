@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Criar/Editar Pacote - TravelFlow">
+  <title>Novo Pacote - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✈️</div>
+          <span class="sidebar-logo-text">TravelFlow</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="pacotes.html" class="sidebar-link active">
+              <span class="sidebar-icon">📦</span>
+              <span>Pacotes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="clientes.html" class="sidebar-link">
+              <span class="sidebar-icon">👥</span>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="reservas.html" class="sidebar-link">
+              <span class="sidebar-icon">🎫</span>
+              <span>Reservas</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📅</span>
+              <span>Calendário</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">💬</span>
+              <span>Mensagens</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📈</span>
+              <span>Relatórios</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">⚙️</span>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar">JS</div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name">João Silva</span>
+            <span class="sidebar-user-role">Administrador</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Menu">
+            ☰
+          </button>
+          
+          <div class="topbar-search">
+            <span class="topbar-search-icon">🔍</span>
+            <input type="search" placeholder="Buscar..." aria-label="Buscar">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" aria-label="Notificações">
+            🔔
+            <span class="notification-badge">3</span>
+          </button>
+          <button class="topbar-icon-btn" aria-label="Mensagens">
+            ✉️
+            <span class="notification-badge">5</span>
+          </button>
+          <a href="login.html" class="topbar-icon-btn" aria-label="Sair" title="Sair">
+            🚪
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <h1 class="page-title">Criar Novo Pacote</h1>
+          <p class="page-subtitle">Preencha as informações abaixo para criar um novo pacote de viagem</p>
+        </div>
+
+        <form id="packageForm">
+          <!-- Informações Básicas -->
+          <div class="card" style="margin-bottom: var(--spacing-xl);">
+            <div class="card-header">
+              <h3 class="card-title">📝 Informações Básicas</h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-8">
+                  <div class="form-group">
+                    <label for="titulo" class="form-label required">Título do Pacote</label>
+                    <input 
+                      type="text" 
+                      id="titulo" 
+                      name="titulo" 
+                      class="form-control" 
+                      placeholder="Ex: Praias Paradisíacas de Maragogi"
+                      required
+                    >
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-group">
+                    <label for="status" class="form-label required">Status</label>
+                    <select id="status" name="status" class="form-control" required>
+                      <option value="rascunho">Rascunho</option>
+                      <option value="ativo">Ativo</option>
+                      <option value="inativo">Inativo</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="destino" class="form-label required">Destino</label>
+                    <input 
+                      type="text" 
+                      id="destino" 
+                      name="destino" 
+                      class="form-control" 
+                      placeholder="Ex: Maragogi, Alagoas"
+                      required
+                    >
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="form-group">
+                    <label for="duracao" class="form-label required">Duração (dias)</label>
+                    <input 
+                      type="number" 
+                      id="duracao" 
+                      name="duracao" 
+                      class="form-control" 
+                      placeholder="7"
+                      min="1"
+                      required
+                    >
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="form-group">
+                    <label for="vagas" class="form-label required">Vagas Totais</label>
+                    <input 
+                      type="number" 
+                      id="vagas" 
+                      name="vagas" 
+                      class="form-control" 
+                      placeholder="20"
+                      min="1"
+                      required
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="descricao" class="form-label required">Descrição</label>
+                <textarea 
+                  id="descricao" 
+                  name="descricao" 
+                  class="form-control" 
+                  rows="4"
+                  placeholder="Descreva o pacote de viagem, destacando os principais atrativos..."
+                  required
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preços -->
+          <div class="card" style="margin-bottom: var(--spacing-xl);">
+            <div class="card-header">
+              <h3 class="card-title">💰 Preços e Valores</h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="preco" class="form-label required">Preço (R$)</label>
+                    <input 
+                      type="number" 
+                      id="preco" 
+                      name="preco" 
+                      class="form-control" 
+                      placeholder="2499.00"
+                      step="0.01"
+                      min="0"
+                      required
+                    >
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="precoPromocional" class="form-label">Preço Promocional (R$)</label>
+                    <input 
+                      type="number" 
+                      id="precoPromocional" 
+                      name="precoPromocional" 
+                      class="form-control" 
+                      placeholder="1999.00"
+                      step="0.01"
+                      min="0"
+                    >
+                    <span class="form-text">Deixe em branco se não houver promoção</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inclusões -->
+          <div class="card" style="margin-bottom: var(--spacing-xl);">
+            <div class="card-header">
+              <h3 class="card-title">✅ O que está incluído</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="inclusoes" class="form-label">Inclusões</label>
+                <textarea 
+                  id="inclusoes" 
+                  name="inclusoes" 
+                  class="form-control" 
+                  rows="5"
+                  placeholder="Liste o que está incluído no pacote (uma por linha):&#10;- Passagens aéreas ida e volta&#10;- 6 diárias em hotel 4 estrelas&#10;- Café da manhã&#10;- Passeio às piscinas naturais&#10;- Seguro viagem"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Imagens -->
+          <div class="card" style="margin-bottom: var(--spacing-xl);">
+            <div class="card-header">
+              <h3 class="card-title">📷 Imagens do Pacote</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="imagens" class="form-label">Upload de Imagens</label>
+                <input 
+                  type="file" 
+                  id="imagens" 
+                  name="imagens" 
+                  class="form-control" 
+                  accept="image/*"
+                  multiple
+                >
+                <span class="form-text">Você pode selecionar múltiplas imagens. Formatos aceitos: JPG, PNG, WebP</span>
+              </div>
+              
+              <div id="imagePreview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                <!-- Preview das imagens aparecerá aqui -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Ações -->
+          <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end;">
+            <a href="pacotes.html" class="btn btn-ghost">Cancelar</a>
+            <button type="button" class="btn btn-outline" id="saveDraft">Salvar como Rascunho</button>
+            <button type="submit" class="btn btn-primary">Publicar Pacote</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Image Preview
+    const imagensInput = document.getElementById('imagens');
+    const imagePreview = document.getElementById('imagePreview');
+
+    imagensInput.addEventListener('change', (e) => {
+      imagePreview.innerHTML = '';
+      const files = Array.from(e.target.files);
+      
+      files.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const div = document.createElement('div');
+          div.style.cssText = 'position: relative; aspect-ratio: 1; background: var(--bg-secondary); border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--border-color);';
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="Preview ${index + 1}" style="width: 100%; height: 100%; object-fit: cover;">
+            <button type="button" onclick="this.parentElement.remove()" style="position: absolute; top: 5px; right: 5px; background: var(--error-color); color: white; border: none; border-radius: var(--radius-full); width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+          `;
+          imagePreview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // Form Submit
+    const packageForm = document.getElementById('packageForm');
+    const saveDraftBtn = document.getElementById('saveDraft');
+
+    packageForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(packageForm);
+      const data = Object.fromEntries(formData.entries());
+      
+      console.log('Dados do pacote:', data);
+      alert('Pacote publicado com sucesso!\n\nRedirecionando para lista de pacotes...');
+      
+      setTimeout(() => {
+        window.location.href = 'pacotes.html';
+      }, 1000);
+    });
+
+    saveDraftBtn.addEventListener('click', () => {
+      document.getElementById('status').value = 'rascunho';
+      alert('Pacote salvo como rascunho!\n\nVocê pode editá-lo e publicar depois.');
+      
+      setTimeout(() => {
+        window.location.href = 'pacotes.html';
+      }, 1000);
+    });
+
+    // Price formatting
+    ['preco', 'precoPromocional'].forEach(id => {
+      const input = document.getElementById(id);
+      input.addEventListener('blur', () => {
+        if (input.value) {
+          input.value = parseFloat(input.value).toFixed(2);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard - TravelFlow">
+  <title>Dashboard - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✈️</div>
+          <span class="sidebar-logo-text">TravelFlow</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="dashboard.html" class="sidebar-link active">
+              <span class="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="pacotes.html" class="sidebar-link">
+              <span class="sidebar-icon">📦</span>
+              <span>Pacotes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="clientes.html" class="sidebar-link">
+              <span class="sidebar-icon">👥</span>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="reservas.html" class="sidebar-link">
+              <span class="sidebar-icon">🎫</span>
+              <span>Reservas</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📅</span>
+              <span>Calendário</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">💬</span>
+              <span>Mensagens</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📈</span>
+              <span>Relatórios</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">⚙️</span>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="userInfo">
+          <div class="sidebar-user-avatar" id="userAvatar">U</div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name" id="userName">Usuário</span>
+            <span class="sidebar-user-role" id="userRole">Carregando...</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Menu">
+            ☰
+          </button>
+          
+          <div class="topbar-search">
+            <span class="topbar-search-icon">🔍</span>
+            <input type="search" placeholder="Buscar pacotes, clientes..." aria-label="Buscar">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" aria-label="Notificações">
+            🔔
+            <span class="notification-badge">3</span>
+          </button>
+          <button class="topbar-icon-btn" aria-label="Mensagens">
+            ✉️
+            <span class="notification-badge">5</span>
+          </button>
+          <a href="login.html" class="topbar-icon-btn" aria-label="Sair" title="Sair">
+            🚪
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle">Bem-vindo de volta! Aqui está um resumo do seu negócio.</p>
+          <div class="page-actions">
+            <a href="pacotes.html" class="btn btn-primary">
+              <span>➕</span>
+              <span>Novo Pacote</span>
+            </a>
+            <button class="btn btn-outline">
+              <span>📥</span>
+              <span>Exportar Relatório</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Pacotes Ativos</p>
+              <h3 class="stat-value">24</h3>
+              <div class="stat-change positive">
+                <span>↑</span>
+                <span>12% vs mês anterior</span>
+              </div>
+            </div>
+            <div class="stat-icon primary">
+              📦
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Reservas do Mês</p>
+              <h3 class="stat-value">48</h3>
+              <div class="stat-change positive">
+                <span>↑</span>
+                <span>8% vs mês anterior</span>
+              </div>
+            </div>
+            <div class="stat-icon success">
+              🎫
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Receita Estimada</p>
+              <h3 class="stat-value">R$ 127k</h3>
+              <div class="stat-change positive">
+                <span>↑</span>
+                <span>23% vs mês anterior</span>
+              </div>
+            </div>
+            <div class="stat-icon warning">
+              💰
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Novos Clientes</p>
+              <h3 class="stat-value">18</h3>
+              <div class="stat-change negative">
+                <span>↓</span>
+                <span>3% vs mês anterior</span>
+              </div>
+            </div>
+            <div class="stat-icon info">
+              👥
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Vendas dos Últimos 6 Meses</h3>
+            <select class="form-control" id="chartPeriod" style="width: auto;">
+              <option value="6">Últimos 6 meses</option>
+              <option value="3">Últimos 3 meses</option>
+              <option value="12">Último ano</option>
+            </select>
+          </div>
+          <div class="chart-placeholder" id="salesChart" style="padding: 2rem; min-height: 300px;">
+            <canvas id="chartCanvas" style="max-height: 280px;"></canvas>
+          </div>
+        </div>
+
+        <!-- Two Columns -->
+        <div class="row">
+          <div class="col-6">
+            <!-- Top Packages -->
+            <div class="data-list">
+              <div class="data-list-header">
+                <h3 class="data-list-title">Pacotes Mais Vendidos</h3>
+                <a href="pacotes.html" class="btn btn-ghost btn-sm">Ver todos</a>
+              </div>
+              
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">🏖️ Praias de Maragogi</h4>
+                  <p class="data-list-item-subtitle">32 vendas • R$ 2.499</p>
+                </div>
+                <span class="badge badge-success">Ativo</span>
+              </div>
+
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">🗼 Paris e Londres</h4>
+                  <p class="data-list-item-subtitle">28 vendas • R$ 12.990</p>
+                </div>
+                <span class="badge badge-success">Ativo</span>
+              </div>
+
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">🏔️ Machu Picchu</h4>
+                  <p class="data-list-item-subtitle">21 vendas • R$ 5.799</p>
+                </div>
+                <span class="badge badge-success">Ativo</span>
+              </div>
+
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">🏝️ Caribe All Inclusive</h4>
+                  <p class="data-list-item-subtitle">18 vendas • R$ 8.500</p>
+                </div>
+                <span class="badge badge-success">Ativo</span>
+              </div>
+
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">🌆 Nova York Completo</h4>
+                  <p class="data-list-item-subtitle">15 vendas • R$ 9.200</p>
+                </div>
+                <span class="badge badge-warning">Poucas vagas</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <!-- Recent Activities -->
+            <div class="data-list">
+              <div class="data-list-header">
+                <h3 class="data-list-title">Próximas Viagens</h3>
+                <a href="#" class="btn btn-ghost btn-sm">Ver calendário</a>
+              </div>
+              
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">Maria Santos - Maragogi</h4>
+                  <p class="data-list-item-subtitle">Partida: 15/10/2025 • 7 dias</p>
+                </div>
+                <span class="badge badge-info">Em 6 dias</span>
+              </div>
+
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">Carlos Oliveira - Europa</h4>
+                  <p class="data-list-item-subtitle">Partida: 20/10/2025 • 12 dias</p>
+                </div>
+                <span class="badge badge-info">Em 11 dias</span>
+              </div>
+
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">Ana Paula - Machu Picchu</h4>
+                  <p class="data-list-item-subtitle">Partida: 25/10/2025 • 8 dias</p>
+                </div>
+                <span class="badge badge-primary">Em 16 dias</span>
+              </div>
+
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">Roberto Silva - Caribe</h4>
+                  <p class="data-list-item-subtitle">Partida: 01/11/2025 • 10 dias</p>
+                </div>
+                <span class="badge badge-primary">Em 23 dias</span>
+              </div>
+
+              <div class="data-list-item">
+                <div class="data-list-item-info">
+                  <h4 class="data-list-item-title">Fernanda Costa - NY</h4>
+                  <p class="data-list-item-subtitle">Partida: 05/11/2025 • 7 dias</p>
+                </div>
+                <span class="badge badge-primary">Em 27 dias</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Verificar autenticação
+    function checkAuth() {
+      const user = localStorage.getItem('travelflow_user');
+      if (!user) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      return JSON.parse(user);
+    }
+
+    // Carregar informações do usuário
+    function loadUserInfo() {
+      const user = checkAuth();
+      if (!user) return;
+
+      const userName = document.getElementById('userName');
+      const userRole = document.getElementById('userRole');
+      const userAvatar = document.getElementById('userAvatar');
+
+      userName.textContent = user.name || user.email.split('@')[0];
+      userRole.textContent = user.role === 'admin' ? 'Administrador' : 'Usuário';
+      
+      const initials = (user.name || user.email).substring(0, 2).toUpperCase();
+      userAvatar.textContent = initials;
+    }
+
+    // Logout
+    function logout() {
+      if (confirm('Deseja realmente sair?')) {
+        localStorage.removeItem('travelflow_user');
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Atualizar estatísticas com animação
+    function animateValue(element, start, end, duration) {
+      const range = end - start;
+      const increment = range / (duration / 16);
+      let current = start;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+          current = end;
+          clearInterval(timer);
+        }
+        
+        if (element.textContent.includes('R$')) {
+          element.textContent = 'R$ ' + Math.floor(current) + 'k';
+        } else {
+          element.textContent = Math.floor(current);
+        }
+      }, 16);
+    }
+
+    // Animar estatísticas ao carregar
+    window.addEventListener('load', () => {
+      const stats = document.querySelectorAll('.stat-value');
+      stats.forEach(stat => {
+        const value = parseInt(stat.textContent.replace(/\D/g, ''));
+        if (value) {
+          animateValue(stat, 0, value, 1000);
+        }
+      });
+    });
+
+    // Gráfico simples com Canvas
+    function drawChart() {
+      const canvas = document.getElementById('chartCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Ajustar tamanho do canvas
+      canvas.width = canvas.parentElement.offsetWidth - 40;
+      canvas.height = 280;
+      
+      const data = [45, 52, 48, 65, 70, 82]; // Vendas dos últimos 6 meses
+      const labels = ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'];
+      const maxValue = Math.max(...data);
+      const padding = 40;
+      const chartHeight = canvas.height - padding * 2;
+      const chartWidth = canvas.width - padding * 2;
+      const barWidth = chartWidth / data.length;
+      
+      // Limpar canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Desenhar grid
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const y = padding + (chartHeight / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(canvas.width - padding, y);
+        ctx.stroke();
+      }
+      
+      // Desenhar barras
+      data.forEach((value, index) => {
+        const barHeight = (value / maxValue) * chartHeight;
+        const x = padding + index * barWidth + barWidth * 0.2;
+        const y = canvas.height - padding - barHeight;
+        const width = barWidth * 0.6;
+        
+        // Gradiente
+        const gradient = ctx.createLinearGradient(0, y, 0, canvas.height - padding);
+        gradient.addColorStop(0, '#2563eb');
+        gradient.addColorStop(1, '#0891b2');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x, y, width, barHeight);
+        
+        // Labels
+        ctx.fillStyle = '#6b7280';
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(labels[index], x + width / 2, canvas.height - padding + 20);
+        
+        // Valores
+        ctx.fillStyle = '#1f2937';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText(value, x + width / 2, y - 10);
+      });
+      
+      // Título do eixo Y
+      ctx.save();
+      ctx.translate(15, canvas.height / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Vendas', 0, 0);
+      ctx.restore();
+    }
+
+    // Atualizar gráfico quando mudar período
+    document.getElementById('chartPeriod').addEventListener('change', function() {
+      // Aqui você poderia carregar dados diferentes baseado no período
+      drawChart();
+    });
+
+    // Notification Click
+    document.querySelectorAll('.topbar-icon-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if (btn.getAttribute('aria-label') === 'Notificações') {
+          e.preventDefault();
+          alert('📬 Notificações:\n\n• Viagem de Maria Santos em 6 dias\n• Nova reserva recebida\n• Pagamento confirmado');
+        } else if (btn.getAttribute('aria-label') === 'Mensagens') {
+          e.preventDefault();
+          alert('💬 Mensagens:\n\n• Cliente perguntou sobre disponibilidade\n• Solicitação de orçamento recebida\n• Confirmação de voucher enviada');
+        } else if (btn.getAttribute('aria-label') === 'Sair') {
+          e.preventDefault();
+          logout();
+        }
+      });
+    });
+
+    // Busca
+    document.querySelector('.topbar-search input').addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      if (query.length > 2) {
+        console.log('Buscando por:', query);
+        // Aqui você implementaria a busca real
+      }
+    });
+
+    // Exportar relatório
+    document.querySelector('.btn-outline').addEventListener('click', function() {
+      const user = checkAuth();
+      if (!user) return;
+      
+      alert('📊 Exportando relatório...\n\nEm produção, isso geraria um PDF ou Excel com:\n• Estatísticas do período\n• Lista de vendas\n• Gráficos e análises');
+    });
+
+    // Inicializar
+    loadUserInfo();
+    
+    // Desenhar gráfico após carregar
+    window.addEventListener('load', () => {
+      setTimeout(drawChart, 100);
+    });
+
+    // Redesenhar gráfico ao redimensionar
+    window.addEventListener('resize', () => {
+      drawChart();
+    });
+  </script>
+</body>
+</html>

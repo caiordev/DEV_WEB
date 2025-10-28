@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Faça login no TravelFlow e gerencie sua agência de viagens.">
+  <title>Login - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-page">
+    <a href="index.html" class="back-to-home">
+      <span>←</span>
+      <span>Voltar para Home</span>
+    </a>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">✈️</div>
+          <h1 class="auth-title">Bem-vindo de volta!</h1>
+          <p class="auth-subtitle">Entre com suas credenciais para acessar o sistema</p>
+        </div>
+
+        <form class="auth-form" id="loginForm">
+          <div class="form-group">
+            <label for="email" class="form-label required">E-mail</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-control" 
+              placeholder="seu@email.com"
+              required
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label required">Senha</label>
+            <div class="password-input-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-control" 
+                placeholder="••••••••"
+                required
+                autocomplete="current-password"
+              >
+              <button type="button" class="password-toggle" aria-label="Mostrar senha">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-options">
+            <div class="remember-me">
+              <input type="checkbox" id="remember" name="remember">
+              <label for="remember">Lembrar-me</label>
+            </div>
+            <a href="#" class="forgot-password">Esqueceu a senha?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block">
+            Entrar
+          </button>
+        </form>
+
+        <div class="auth-divider">
+          <span>ou continue com</span>
+        </div>
+
+        <div class="social-login">
+          <button class="social-btn" type="button">
+            <span>🔵</span>
+            <span>Continuar com Google</span>
+          </button>
+          <button class="social-btn" type="button">
+            <span>📘</span>
+            <span>Continuar com Facebook</span>
+          </button>
+        </div>
+
+        <div class="auth-footer">
+          <p>Ainda não tem uma conta?</p>
+          <a href="cadastro.html">Criar conta gratuitamente</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Password Toggle
+    const passwordToggle = document.querySelector('.password-toggle');
+    const passwordInput = document.getElementById('password');
+
+    passwordToggle.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      passwordToggle.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Validação de Email
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    // Mostrar mensagem de erro
+    function showError(input, message) {
+      const formGroup = input.parentElement.parentElement || input.parentElement;
+      let errorElement = formGroup.querySelector('.form-error');
+      
+      if (!errorElement) {
+        errorElement = document.createElement('span');
+        errorElement.className = 'form-error';
+        formGroup.appendChild(errorElement);
+      }
+      
+      errorElement.textContent = message;
+      input.classList.add('error');
+    }
+
+    // Limpar mensagem de erro
+    function clearError(input) {
+      const formGroup = input.parentElement.parentElement || input.parentElement;
+      const errorElement = formGroup.querySelector('.form-error');
+      
+      if (errorElement) {
+        errorElement.remove();
+      }
+      input.classList.remove('error');
+    }
+
+    // Validação em tempo real
+    document.getElementById('email').addEventListener('blur', function() {
+      if (this.value && !validateEmail(this.value)) {
+        showError(this, 'Por favor, insira um e-mail válido');
+      } else {
+        clearError(this);
+      }
+    });
+
+    document.getElementById('password').addEventListener('input', function() {
+      if (this.value.length > 0 && this.value.length < 6) {
+        showError(this, 'A senha deve ter no mínimo 6 caracteres');
+      } else {
+        clearError(this);
+      }
+    });
+
+    // Form Submit com validação
+    const loginForm = document.getElementById('loginForm');
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      
+      let hasError = false;
+
+      // Validar email
+      if (!email) {
+        showError(emailInput, 'O e-mail é obrigatório');
+        hasError = true;
+      } else if (!validateEmail(email)) {
+        showError(emailInput, 'Por favor, insira um e-mail válido');
+        hasError = true;
+      } else {
+        clearError(emailInput);
+      }
+
+      // Validar senha
+      if (!password) {
+        showError(passwordInput, 'A senha é obrigatória');
+        hasError = true;
+      } else if (password.length < 6) {
+        showError(passwordInput, 'A senha deve ter no mínimo 6 caracteres');
+        hasError = true;
+      } else {
+        clearError(passwordInput);
+      }
+
+      if (hasError) return;
+
+      // Simular loading
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⏳</span> Entrando...';
+
+      // Simulação de autenticação
+      setTimeout(() => {
+        // Credenciais de demonstração
+        const validCredentials = [
+          { email: 'admin@travelflow.com', password: 'admin123', role: 'admin' },
+          { email: 'usuario@travelflow.com', password: 'user123', role: 'user' },
+          { email: 'demo@demo.com', password: 'demo123', role: 'admin' }
+        ];
+
+        const user = validCredentials.find(u => u.email === email && u.password === password);
+
+        if (user) {
+          // Salvar dados do usuário no localStorage
+          localStorage.setItem('travelflow_user', JSON.stringify({
+            email: user.email,
+            role: user.role,
+            name: user.email.split('@')[0],
+            loginTime: new Date().toISOString()
+          }));
+
+          // Feedback de sucesso
+          submitBtn.innerHTML = '✓ Login realizado!';
+          submitBtn.style.backgroundColor = '#10b981';
+
+          // Redirecionar
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 800);
+        } else {
+          // Erro de autenticação
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Entrar';
+          
+          showError(passwordInput, 'E-mail ou senha incorretos');
+          
+          // Mostrar dica de credenciais de teste
+          const hint = document.createElement('div');
+          hint.className = 'alert alert-info';
+          hint.style.marginTop = '1rem';
+          hint.innerHTML = `
+            <strong>💡 Credenciais de teste:</strong><br>
+            Admin: admin@travelflow.com / admin123<br>
+            Usuário: usuario@travelflow.com / user123
+          `;
+          
+          const existingHint = loginForm.querySelector('.alert');
+          if (existingHint) existingHint.remove();
+          
+          loginForm.appendChild(hint);
+        }
+      }, 1500);
+    });
+
+    // Social Login
+    document.querySelectorAll('.social-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        
+        setTimeout(() => {
+          alert('Login social em desenvolvimento.\n\nEm produção, isso redirecionaria para autenticação OAuth.');
+          btn.disabled = false;
+          btn.style.opacity = '1';
+        }, 500);
+      });
+    });
+
+    // Forgot Password
+    document.querySelector('.forgot-password').addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      const emailInput = document.getElementById('email');
+      const email = emailInput.value.trim();
+      
+      if (email && validateEmail(email)) {
+        if (confirm(`Deseja enviar um link de recuperação para ${email}?`)) {
+          alert(`✓ Link de recuperação enviado para: ${email}\n\nVerifique sua caixa de entrada e spam.\n\n(Simulação - em produção isso enviaria um e-mail real)`);
+        }
+      } else {
+        alert('Por favor, preencha seu e-mail no campo acima antes de solicitar recuperação de senha.');
+        emailInput.focus();
+      }
+    });
+
+    // Adicionar animação de spin
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

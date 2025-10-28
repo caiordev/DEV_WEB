@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calendário de Viagens - TravelFlow">
+  <title>Calendário - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✈️</div>
+          <span class="sidebar-logo-text">TravelFlow</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="pacotes.html" class="sidebar-link">
+              <span class="sidebar-icon">📦</span>
+              <span>Pacotes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="clientes.html" class="sidebar-link">
+              <span class="sidebar-icon">👥</span>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="reservas.html" class="sidebar-link">
+              <span class="sidebar-icon">🎫</span>
+              <span>Reservas</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="calendario.html" class="sidebar-link active">
+              <span class="sidebar-icon">📅</span>
+              <span>Calendário</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="mensagens.html" class="sidebar-link">
+              <span class="sidebar-icon">💬</span>
+              <span>Mensagens</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="relatorios.html" class="sidebar-link">
+              <span class="sidebar-icon">📈</span>
+              <span>Relatórios</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="configuracoes.html" class="sidebar-link">
+              <span class="sidebar-icon">⚙️</span>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="userInfo">
+          <div class="sidebar-user-avatar" id="userAvatar">U</div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name" id="userName">Usuário</span>
+            <span class="sidebar-user-role" id="userRole">Carregando...</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Menu">
+            ☰
+          </button>
+          
+          <div class="topbar-search">
+            <span class="topbar-search-icon">🔍</span>
+            <input type="search" placeholder="Buscar viagens..." aria-label="Buscar">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" aria-label="Notificações">
+            🔔
+            <span class="notification-badge">3</span>
+          </button>
+          <button class="topbar-icon-btn" aria-label="Mensagens">
+            ✉️
+            <span class="notification-badge">5</span>
+          </button>
+          <a href="login.html" class="topbar-icon-btn" aria-label="Sair" title="Sair">
+            🚪
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <h1 class="page-title">Calendário de Viagens</h1>
+          <p class="page-subtitle">Visualize todas as viagens agendadas</p>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="alert('Funcionalidade de adicionar evento em desenvolvimento')">
+              <span>➕</span>
+              <span>Nova Viagem</span>
+            </button>
+            <button class="btn btn-outline" onclick="exportCalendar()">
+              <span>📥</span>
+              <span>Exportar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card" style="margin-bottom: var(--spacing-xl); padding: var(--spacing-lg);">
+          <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap;">
+            <select class="form-control" style="width: auto;" id="filterStatus">
+              <option value="all">Todos os Status</option>
+              <option value="confirmada">Confirmadas</option>
+              <option value="pendente">Pendentes</option>
+              <option value="cancelada">Canceladas</option>
+            </select>
+            <select class="form-control" style="width: auto;" id="filterDestino">
+              <option value="all">Todos os Destinos</option>
+              <option value="nacional">Nacional</option>
+              <option value="internacional">Internacional</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="calendar-container">
+          <div class="calendar-header">
+            <h2 id="currentMonth" style="margin: 0;">Outubro 2025</h2>
+            <div class="calendar-nav">
+              <button onclick="changeMonth(-1)">← Anterior</button>
+              <button onclick="goToToday()">Hoje</button>
+              <button onclick="changeMonth(1)">Próximo →</button>
+            </div>
+          </div>
+
+          <div class="calendar-grid" id="calendarGrid">
+            <!-- Calendar will be generated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Upcoming Trips -->
+        <div class="upcoming-trips">
+          <h3 style="margin-bottom: var(--spacing-lg);">Próximas Viagens (7 dias)</h3>
+          
+          <div class="trip-item">
+            <div class="trip-info">
+              <h4>🏖️ Maria Santos - Maragogi</h4>
+              <p>Partida: 15/10/2025 às 08:00 | Retorno: 22/10/2025 | 7 dias</p>
+            </div>
+            <div style="display: flex; gap: var(--spacing-sm);">
+              <span class="badge badge-success">Confirmada</span>
+              <button class="btn btn-ghost btn-sm" onclick="viewTrip('maria-maragogi')">Ver Detalhes</button>
+            </div>
+          </div>
+
+          <div class="trip-item">
+            <div class="trip-info">
+              <h4>🗼 Carlos Oliveira - Europa</h4>
+              <p>Partida: 20/10/2025 às 14:30 | Retorno: 01/11/2025 | 12 dias</p>
+            </div>
+            <div style="display: flex; gap: var(--spacing-sm);">
+              <span class="badge badge-success">Confirmada</span>
+              <button class="btn btn-ghost btn-sm" onclick="viewTrip('carlos-europa')">Ver Detalhes</button>
+            </div>
+          </div>
+
+          <div class="trip-item">
+            <div class="trip-info">
+              <h4>🏔️ Ana Paula - Machu Picchu</h4>
+              <p>Partida: 25/10/2025 às 10:00 | Retorno: 02/11/2025 | 8 dias</p>
+            </div>
+            <div style="display: flex; gap: var(--spacing-sm);">
+              <span class="badge badge-warning">Pendente</span>
+              <button class="btn btn-ghost btn-sm" onclick="viewTrip('ana-machu')">Ver Detalhes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Verificar autenticação
+    function checkAuth() {
+      const user = localStorage.getItem('travelflow_user');
+      if (!user) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      return JSON.parse(user);
+    }
+
+    // Carregar informações do usuário
+    function loadUserInfo() {
+      const user = checkAuth();
+      if (!user) return;
+
+      document.getElementById('userName').textContent = user.name || user.email.split('@')[0];
+      document.getElementById('userRole').textContent = user.role === 'admin' ? 'Administrador' : 'Usuário';
+      document.getElementById('userAvatar').textContent = (user.name || user.email).substring(0, 2).toUpperCase();
+    }
+
+    // Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Calendar Logic
+    let currentDate = new Date(2025, 9, 9); // Outubro 2025
+
+    const trips = [
+      { date: '2025-10-15', title: 'Maria - Maragogi', type: 'success' },
+      { date: '2025-10-20', title: 'Carlos - Europa', type: 'success' },
+      { date: '2025-10-25', title: 'Ana - Machu Picchu', type: 'warning' },
+      { date: '2025-11-01', title: 'Roberto - Caribe', type: 'success' },
+      { date: '2025-11-05', title: 'Fernanda - NY', type: 'success' },
+      { date: '2025-10-12', title: 'João - Fernando de Noronha', type: 'success' },
+      { date: '2025-10-18', title: 'Paula - Gramado', type: 'success' }
+    ];
+
+    function renderCalendar() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      
+      document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+      
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const daysInPrevMonth = new Date(year, month, 0).getDate();
+      
+      const calendarGrid = document.getElementById('calendarGrid');
+      calendarGrid.innerHTML = '';
+      
+      // Day headers
+      const dayHeaders = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      dayHeaders.forEach(day => {
+        const header = document.createElement('div');
+        header.className = 'calendar-day-header';
+        header.textContent = day;
+        calendarGrid.appendChild(header);
+      });
+      
+      // Previous month days
+      for (let i = firstDay - 1; i >= 0; i--) {
+        const day = document.createElement('div');
+        day.className = 'calendar-day other-month';
+        day.innerHTML = `<div class="calendar-day-number">${daysInPrevMonth - i}</div>`;
+        calendarGrid.appendChild(day);
+      }
+      
+      // Current month days
+      const today = new Date();
+      for (let i = 1; i <= daysInMonth; i++) {
+        const day = document.createElement('div');
+        day.className = 'calendar-day';
+        
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        
+        if (year === today.getFullYear() && month === today.getMonth() && i === today.getDate()) {
+          day.classList.add('today');
+        }
+        
+        let dayContent = `<div class="calendar-day-number">${i}</div>`;
+        
+        // Add events
+        const dayTrips = trips.filter(trip => trip.date === dateStr);
+        dayTrips.forEach(trip => {
+          dayContent += `<div class="calendar-event ${trip.type}" onclick="viewTrip('${trip.title}')">${trip.title}</div>`;
+        });
+        
+        day.innerHTML = dayContent;
+        day.onclick = () => showDayDetails(dateStr);
+        calendarGrid.appendChild(day);
+      }
+      
+      // Next month days
+      const totalCells = calendarGrid.children.length - 7; // Subtract headers
+      const remainingCells = 42 - totalCells - 7; // 6 weeks * 7 days - headers
+      for (let i = 1; i <= remainingCells; i++) {
+        const day = document.createElement('div');
+        day.className = 'calendar-day other-month';
+        day.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+        calendarGrid.appendChild(day);
+      }
+    }
+
+    function changeMonth(delta) {
+      currentDate.setMonth(currentDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    function goToToday() {
+      currentDate = new Date(2025, 9, 9);
+      renderCalendar();
+    }
+
+    function showDayDetails(date) {
+      const dayTrips = trips.filter(trip => trip.date === date);
+      if (dayTrips.length > 0) {
+        alert(`Viagens em ${date}:\n\n${dayTrips.map(t => `• ${t.title}`).join('\n')}`);
+      } else {
+        alert(`Nenhuma viagem agendada para ${date}`);
+      }
+    }
+
+    function viewTrip(id) {
+      alert(`Visualizando detalhes da viagem: ${id}\n\nEm produção, isso abriria um modal com:\n• Informações do cliente\n• Detalhes do pacote\n• Status do pagamento\n• Voucher\n• Opções de edição`);
+    }
+
+    function exportCalendar() {
+      alert('📅 Exportando calendário...\n\nFormatos disponíveis:\n• PDF\n• Excel\n• iCalendar (.ics)\n• Google Calendar');
+    }
+
+    // Filtros
+    document.getElementById('filterStatus').addEventListener('change', function() {
+      console.log('Filtrar por status:', this.value);
+      // Implementar filtro
+    });
+
+    document.getElementById('filterDestino').addEventListener('change', function() {
+      console.log('Filtrar por destino:', this.value);
+      // Implementar filtro
+    });
+
+    // Logout
+    document.querySelectorAll('.topbar-icon-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if (btn.getAttribute('aria-label') === 'Sair') {
+          e.preventDefault();
+          if (confirm('Deseja realmente sair?')) {
+            localStorage.removeItem('travelflow_user');
+            window.location.href = 'login.html';
+          }
+        }
+      });
+    });
+
+    // Inicializar
+    loadUserInfo();
+    renderCalendar();
+  </script>
+</body>
+</html>

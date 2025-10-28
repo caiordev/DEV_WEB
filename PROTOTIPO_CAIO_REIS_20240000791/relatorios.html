@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Relatórios - TravelFlow">
+  <title>Relatórios - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✈️</div>
+          <span class="sidebar-logo-text">TravelFlow</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="pacotes.html" class="sidebar-link">
+              <span class="sidebar-icon">📦</span>
+              <span>Pacotes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="clientes.html" class="sidebar-link">
+              <span class="sidebar-icon">👥</span>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="reservas.html" class="sidebar-link">
+              <span class="sidebar-icon">🎫</span>
+              <span>Reservas</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="calendario.html" class="sidebar-link">
+              <span class="sidebar-icon">📅</span>
+              <span>Calendário</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="mensagens.html" class="sidebar-link">
+              <span class="sidebar-icon">💬</span>
+              <span>Mensagens</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="relatorios.html" class="sidebar-link active">
+              <span class="sidebar-icon">📈</span>
+              <span>Relatórios</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="configuracoes.html" class="sidebar-link">
+              <span class="sidebar-icon">⚙️</span>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="userInfo">
+          <div class="sidebar-user-avatar" id="userAvatar">U</div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name" id="userName">Usuário</span>
+            <span class="sidebar-user-role" id="userRole">Carregando...</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Menu">
+            ☰
+          </button>
+          
+          <h2 style="margin: 0; font-size: var(--font-size-xl);">Relatórios</h2>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" aria-label="Notificações">
+            🔔
+            <span class="notification-badge">3</span>
+          </button>
+          <a href="login.html" class="topbar-icon-btn" aria-label="Sair" title="Sair">
+            🚪
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Relatórios e Análises</h1>
+            <p class="page-subtitle">Visualize e exporte relatórios detalhados do seu negócio</p>
+          </div>
+        </div>
+
+        <!-- Filtros Globais -->
+        <div class="filters-section">
+          <h3 style="margin-bottom: var(--spacing-md);">Filtros</h3>
+          <div class="filters-grid">
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label">Período</label>
+              <select class="form-control" id="periodFilter">
+                <option value="today">Hoje</option>
+                <option value="week">Esta Semana</option>
+                <option value="month" selected>Este Mês</option>
+                <option value="quarter">Este Trimestre</option>
+                <option value="year">Este Ano</option>
+                <option value="custom">Personalizado</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label">Data Início</label>
+              <input type="date" class="form-control" id="startDate" value="2025-10-01">
+            </div>
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label">Data Fim</label>
+              <input type="date" class="form-control" id="endDate" value="2025-10-31">
+            </div>
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label">Status</label>
+              <select class="form-control" id="statusFilter">
+                <option value="all">Todos</option>
+                <option value="confirmada">Confirmadas</option>
+                <option value="pendente">Pendentes</option>
+                <option value="cancelada">Canceladas</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top: var(--spacing-lg);">
+            <button class="btn btn-primary" onclick="applyFilters()">Aplicar Filtros</button>
+            <button class="btn btn-outline" onclick="resetFilters()">Limpar</button>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+          <div class="quick-stat">
+            <div class="quick-stat-value" id="totalRevenue">R$ 127k</div>
+            <div class="quick-stat-label">Receita Total</div>
+          </div>
+          <div class="quick-stat">
+            <div class="quick-stat-value" id="totalBookings">48</div>
+            <div class="quick-stat-label">Reservas</div>
+          </div>
+          <div class="quick-stat">
+            <div class="quick-stat-value" id="avgTicket">R$ 2.646</div>
+            <div class="quick-stat-label">Ticket Médio</div>
+          </div>
+          <div class="quick-stat">
+            <div class="quick-stat-value" id="conversionRate">23%</div>
+            <div class="quick-stat-label">Taxa de Conversão</div>
+          </div>
+        </div>
+
+        <!-- Reports Grid -->
+        <div class="reports-grid">
+          <div class="report-card" onclick="generateReport('vendas')">
+            <div class="report-icon">💰</div>
+            <h3>Relatório de Vendas</h3>
+            <p>Análise completa de vendas por período, pacote e destino</p>
+            <div class="report-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); exportReport('vendas', 'pdf')">📄 PDF</button>
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); exportReport('vendas', 'excel')">📊 Excel</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="generateReport('clientes')">
+            <div class="report-icon">👥</div>
+            <h3>Relatório de Clientes</h3>
+            <p>Dados demográficos, preferências e histórico de compras</p>
+            <div class="report-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); exportReport('clientes', 'pdf')">📄 PDF</button>
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); exportReport('clientes', 'excel')">📊 Excel</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="generateReport('pacotes')">
+            <div class="report-icon">📦</div>
+            <h3>Desempenho de Pacotes</h3>
+            <p>Pacotes mais vendidos, margem de lucro e sazonalidade</p>
+            <div class="report-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); exportReport('pacotes', 'pdf')">📄 PDF</button>
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); exportReport('pacotes', 'excel')">📊 Excel</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="generateReport('financeiro')">
+            <div class="report-icon">💵</div>
+            <h3>Relatório Financeiro</h3>
+            <p>Receitas, despesas, fluxo de caixa e projeções</p>
+            <div class="report-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); exportReport('financeiro', 'pdf')">📄 PDF</button>
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); exportReport('financeiro', 'excel')">📊 Excel</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="generateReport('marketing')">
+            <div class="report-icon">📢</div>
+            <h3>Análise de Marketing</h3>
+            <p>ROI de campanhas, origem de leads e conversões</p>
+            <div class="report-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); exportReport('marketing', 'pdf')">📄 PDF</button>
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); exportReport('marketing', 'excel')">📊 Excel</button>
+            </div>
+          </div>
+
+          <div class="report-card" onclick="generateReport('operacional')">
+            <div class="report-icon">⚙️</div>
+            <h3>Relatório Operacional</h3>
+            <p>Eficiência operacional, SLA e satisfação do cliente</p>
+            <div class="report-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); exportReport('operacional', 'pdf')">📄 PDF</button>
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); exportReport('operacional', 'excel')">📊 Excel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-section">
+          <h3 style="margin-bottom: var(--spacing-lg);">Evolução de Vendas</h3>
+          <canvas id="salesChart" class="chart-canvas"></canvas>
+        </div>
+
+        <!-- Top Destinations -->
+        <div class="data-table">
+          <div class="card-header">
+            <h3 class="card-title">Top 10 Destinos Mais Vendidos</h3>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Posição</th>
+                  <th>Destino</th>
+                  <th>Vendas</th>
+                  <th>Receita</th>
+                  <th>Crescimento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>🏖️ Maragogi, Brasil</td>
+                  <td>32</td>
+                  <td>R$ 79.968</td>
+                  <td><span class="badge badge-success">↑ 15%</span></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>🗼 Paris, França</td>
+                  <td>28</td>
+                  <td>R$ 363.720</td>
+                  <td><span class="badge badge-success">↑ 8%</span></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>🏔️ Machu Picchu, Peru</td>
+                  <td>21</td>
+                  <td>R$ 121.779</td>
+                  <td><span class="badge badge-success">↑ 12%</span></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>🏝️ Cancún, México</td>
+                  <td>18</td>
+                  <td>R$ 153.000</td>
+                  <td><span class="badge badge-warning">↓ 3%</span></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>🌆 Nova York, EUA</td>
+                  <td>15</td>
+                  <td>R$ 138.000</td>
+                  <td><span class="badge badge-success">↑ 5%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Verificar autenticação
+    function checkAuth() {
+      const user = localStorage.getItem('travelflow_user');
+      if (!user) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      return JSON.parse(user);
+    }
+
+    // Carregar informações do usuário
+    function loadUserInfo() {
+      const user = checkAuth();
+      if (!user) return;
+
+      document.getElementById('userName').textContent = user.name || user.email.split('@')[0];
+      document.getElementById('userRole').textContent = user.role === 'admin' ? 'Administrador' : 'Usuário';
+      document.getElementById('userAvatar').textContent = (user.name || user.email).substring(0, 2).toUpperCase();
+    }
+
+    // Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Gráfico de vendas
+    function drawSalesChart() {
+      const canvas = document.getElementById('salesChart');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = 300;
+      
+      const data = [65, 78, 82, 95, 110, 127];
+      const labels = ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'];
+      const maxValue = Math.max(...data);
+      const padding = 50;
+      const chartHeight = canvas.height - padding * 2;
+      const chartWidth = canvas.width - padding * 2;
+      const pointSpacing = chartWidth / (data.length - 1);
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Grid
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const y = padding + (chartHeight / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(canvas.width - padding, y);
+        ctx.stroke();
+        
+        // Labels Y
+        ctx.fillStyle = '#6b7280';
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'right';
+        const value = Math.round(maxValue - (maxValue / 5) * i);
+        ctx.fillText(`R$ ${value}k`, padding - 10, y + 4);
+      }
+      
+      // Linha
+      ctx.beginPath();
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      
+      data.forEach((value, index) => {
+        const x = padding + index * pointSpacing;
+        const y = canvas.height - padding - (value / maxValue) * chartHeight;
+        
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      
+      ctx.stroke();
+      
+      // Área sob a linha
+      ctx.lineTo(canvas.width - padding, canvas.height - padding);
+      ctx.lineTo(padding, canvas.height - padding);
+      ctx.closePath();
+      
+      const gradient = ctx.createLinearGradient(0, padding, 0, canvas.height - padding);
+      gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+      gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      
+      // Pontos
+      data.forEach((value, index) => {
+        const x = padding + index * pointSpacing;
+        const y = canvas.height - padding - (value / maxValue) * chartHeight;
+        
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#2563eb';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Labels X
+        ctx.fillStyle = '#6b7280';
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(labels[index], x, canvas.height - padding + 20);
+      });
+    }
+
+    function generateReport(type) {
+      const reportNames = {
+        'vendas': 'Vendas',
+        'clientes': 'Clientes',
+        'pacotes': 'Pacotes',
+        'financeiro': 'Financeiro',
+        'marketing': 'Marketing',
+        'operacional': 'Operacional'
+      };
+
+      alert(`📊 Gerando Relatório de ${reportNames[type]}...\n\nO relatório incluirá:\n• Análise detalhada do período\n• Gráficos e tabelas\n• Comparativo com períodos anteriores\n• Insights e recomendações\n\nEm produção, isso abriria uma visualização completa do relatório.`);
+    }
+
+    function exportReport(type, format) {
+      const formatNames = {
+        'pdf': 'PDF',
+        'excel': 'Excel'
+      };
+
+      alert(`📥 Exportando para ${formatNames[format]}...\n\nO arquivo será baixado em instantes.\n\nFormato: ${formatNames[format]}\nTipo: ${type}\nPeríodo: Outubro 2025`);
+    }
+
+    function applyFilters() {
+      const period = document.getElementById('periodFilter').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const status = document.getElementById('statusFilter').value;
+
+      alert(`✓ Filtros aplicados!\n\nPeríodo: ${period}\nDe: ${startDate}\nAté: ${endDate}\nStatus: ${status}\n\nAtualizando relatórios...`);
+      
+      // Simular atualização de dados
+      setTimeout(() => {
+        drawSalesChart();
+      }, 500);
+    }
+
+    function resetFilters() {
+      document.getElementById('periodFilter').value = 'month';
+      document.getElementById('startDate').value = '2025-10-01';
+      document.getElementById('endDate').value = '2025-10-31';
+      document.getElementById('statusFilter').value = 'all';
+      
+      alert('✓ Filtros resetados para os valores padrão');
+    }
+
+    // Logout
+    document.querySelectorAll('.topbar-icon-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if (btn.getAttribute('aria-label') === 'Sair') {
+          e.preventDefault();
+          if (confirm('Deseja realmente sair?')) {
+            localStorage.removeItem('travelflow_user');
+            window.location.href = 'login.html';
+          }
+        }
+      });
+    });
+
+    // Inicializar
+    loadUserInfo();
+    window.addEventListener('load', () => {
+      setTimeout(drawSalesChart, 100);
+    });
+
+    window.addEventListener('resize', drawSalesChart);
+  </script>
+</body>
+</html>

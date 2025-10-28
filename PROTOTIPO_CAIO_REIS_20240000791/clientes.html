@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gerenciamento de Clientes - TravelFlow">
+  <title>Clientes - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✈️</div>
+          <span class="sidebar-logo-text">TravelFlow</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="pacotes.html" class="sidebar-link">
+              <span class="sidebar-icon">📦</span>
+              <span>Pacotes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="clientes.html" class="sidebar-link active">
+              <span class="sidebar-icon">👥</span>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="reservas.html" class="sidebar-link">
+              <span class="sidebar-icon">🎫</span>
+              <span>Reservas</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📅</span>
+              <span>Calendário</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">💬</span>
+              <span>Mensagens</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📈</span>
+              <span>Relatórios</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">⚙️</span>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar">JS</div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name">João Silva</span>
+            <span class="sidebar-user-role">Administrador</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Menu">
+            ☰
+          </button>
+          
+          <div class="topbar-search">
+            <span class="topbar-search-icon">🔍</span>
+            <input type="search" placeholder="Buscar clientes..." aria-label="Buscar">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" aria-label="Notificações">
+            🔔
+            <span class="notification-badge">3</span>
+          </button>
+          <button class="topbar-icon-btn" aria-label="Mensagens">
+            ✉️
+            <span class="notification-badge">5</span>
+          </button>
+          <a href="login.html" class="topbar-icon-btn" aria-label="Sair" title="Sair">
+            🚪
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <h1 class="page-title">Gerenciar Clientes</h1>
+          <p class="page-subtitle">Visualize e gerencie todos os clientes cadastrados</p>
+          <div class="page-actions">
+            <button class="btn btn-primary" id="addClientBtn">
+              <span>➕</span>
+              <span>Novo Cliente</span>
+            </button>
+            <button class="btn btn-outline">
+              <span>📥</span>
+              <span>Importar</span>
+            </button>
+            <button class="btn btn-outline">
+              <span>📤</span>
+              <span>Exportar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: var(--spacing-xl);">
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Total de Clientes</p>
+              <h3 class="stat-value">156</h3>
+            </div>
+            <div class="stat-icon primary">👥</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Novos este Mês</p>
+              <h3 class="stat-value">18</h3>
+            </div>
+            <div class="stat-icon success">✨</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Clientes Ativos</p>
+              <h3 class="stat-value">142</h3>
+            </div>
+            <div class="stat-icon info">✅</div>
+          </div>
+        </div>
+
+        <!-- Clients Table -->
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>CPF</th>
+                <th>Viagens</th>
+                <th>Última Compra</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div class="sidebar-user-avatar" style="width: 40px; height: 40px;">MS</div>
+                    <div>
+                      <strong>Maria Santos</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Cliente desde 2024</small>
+                    </div>
+                  </div>
+                </td>
+                <td>maria.santos@email.com</td>
+                <td>(11) 98765-4321</td>
+                <td>123.456.789-00</td>
+                <td><span class="badge badge-success">5 viagens</span></td>
+                <td>15/09/2025</td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div class="sidebar-user-avatar" style="width: 40px; height: 40px;">CO</div>
+                    <div>
+                      <strong>Carlos Oliveira</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Cliente desde 2023</small>
+                    </div>
+                  </div>
+                </td>
+                <td>carlos.oliveira@email.com</td>
+                <td>(21) 97654-3210</td>
+                <td>234.567.890-11</td>
+                <td><span class="badge badge-success">8 viagens</span></td>
+                <td>10/09/2025</td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div class="sidebar-user-avatar" style="width: 40px; height: 40px;">AP</div>
+                    <div>
+                      <strong>Ana Paula Costa</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Cliente desde 2025</small>
+                    </div>
+                  </div>
+                </td>
+                <td>ana.costa@email.com</td>
+                <td>(31) 96543-2109</td>
+                <td>345.678.901-22</td>
+                <td><span class="badge badge-primary">2 viagens</span></td>
+                <td>05/09/2025</td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div class="sidebar-user-avatar" style="width: 40px; height: 40px;">RS</div>
+                    <div>
+                      <strong>Roberto Silva</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Cliente desde 2024</small>
+                    </div>
+                  </div>
+                </td>
+                <td>roberto.silva@email.com</td>
+                <td>(41) 95432-1098</td>
+                <td>456.789.012-33</td>
+                <td><span class="badge badge-success">4 viagens</span></td>
+                <td>28/08/2025</td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div class="sidebar-user-avatar" style="width: 40px; height: 40px;">FC</div>
+                    <div>
+                      <strong>Fernanda Costa</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Cliente desde 2025</small>
+                    </div>
+                  </div>
+                </td>
+                <td>fernanda.costa@email.com</td>
+                <td>(51) 94321-0987</td>
+                <td>567.890.123-44</td>
+                <td><span class="badge badge-primary">1 viagem</span></td>
+                <td>20/08/2025</td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: center; margin-top: var(--spacing-xl); gap: var(--spacing-sm);">
+          <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+          <button class="btn btn-primary btn-sm">1</button>
+          <button class="btn btn-outline btn-sm">2</button>
+          <button class="btn btn-outline btn-sm">3</button>
+          <button class="btn btn-outline btn-sm">Próximo</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Add Client
+    document.getElementById('addClientBtn').addEventListener('click', () => {
+      alert('Funcionalidade de adicionar cliente.\n\nEm produção, abriria um modal ou redirecionaria para formulário.');
+    });
+
+    // Action Buttons
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const action = btn.classList.contains('view') ? 'visualizar' : 
+                      btn.classList.contains('edit') ? 'editar' : 'excluir';
+        const row = btn.closest('tr');
+        const clientName = row.querySelector('strong').textContent;
+        
+        if (action === 'excluir') {
+          if (confirm(`Tem certeza que deseja excluir o cliente "${clientName}"?`)) {
+            alert('Cliente excluído com sucesso!');
+            row.remove();
+          }
+        } else if (action === 'visualizar') {
+          alert(`Visualizando perfil completo de: ${clientName}\n\nEm produção, mostraria histórico completo de viagens, dados pessoais, etc.`);
+        } else {
+          alert(`Editando dados de: ${clientName}`);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gerenciamento de Reservas - TravelFlow">
+  <title>Reservas - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✈️</div>
+          <span class="sidebar-logo-text">TravelFlow</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="pacotes.html" class="sidebar-link">
+              <span class="sidebar-icon">📦</span>
+              <span>Pacotes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="clientes.html" class="sidebar-link">
+              <span class="sidebar-icon">👥</span>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="reservas.html" class="sidebar-link active">
+              <span class="sidebar-icon">🎫</span>
+              <span>Reservas</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📅</span>
+              <span>Calendário</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">💬</span>
+              <span>Mensagens</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📈</span>
+              <span>Relatórios</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">⚙️</span>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar">JS</div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name">João Silva</span>
+            <span class="sidebar-user-role">Administrador</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Menu">
+            ☰
+          </button>
+          
+          <div class="topbar-search">
+            <span class="topbar-search-icon">🔍</span>
+            <input type="search" placeholder="Buscar reservas..." aria-label="Buscar">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" aria-label="Notificações">
+            🔔
+            <span class="notification-badge">3</span>
+          </button>
+          <button class="topbar-icon-btn" aria-label="Mensagens">
+            ✉️
+            <span class="notification-badge">5</span>
+          </button>
+          <a href="login.html" class="topbar-icon-btn" aria-label="Sair" title="Sair">
+            🚪
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <h1 class="page-title">Gerenciar Reservas</h1>
+          <p class="page-subtitle">Visualize e gerencie todas as reservas e vouchers</p>
+          <div class="page-actions">
+            <button class="btn btn-primary">
+              <span>➕</span>
+              <span>Nova Reserva</span>
+            </button>
+            <button class="btn btn-outline">
+              <span>📤</span>
+              <span>Exportar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" style="margin-bottom: var(--spacing-xl);">
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Reservas Ativas</p>
+              <h3 class="stat-value">48</h3>
+            </div>
+            <div class="stat-icon success">✅</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Aguardando Confirmação</p>
+              <h3 class="stat-value">12</h3>
+            </div>
+            <div class="stat-icon warning">⏳</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Vouchers Gerados</p>
+              <h3 class="stat-value">45</h3>
+            </div>
+            <div class="stat-icon primary">🎫</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <p class="stat-label">Receita do Mês</p>
+              <h3 class="stat-value">R$ 127k</h3>
+            </div>
+            <div class="stat-icon info">💰</div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: var(--spacing-xl);">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-4">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="filterStatus" class="form-label">Status</label>
+                  <select id="filterStatus" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="confirmada">Confirmadas</option>
+                    <option value="pendente">Pendentes</option>
+                    <option value="cancelada">Canceladas</option>
+                    <option value="concluida">Concluídas</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="filterPeriodo" class="form-label">Período</label>
+                  <select id="filterPeriodo" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="hoje">Hoje</option>
+                    <option value="semana">Esta semana</option>
+                    <option value="mes">Este mês</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="filterOrdem" class="form-label">Ordenar por</label>
+                  <select id="filterOrdem" class="form-control">
+                    <option value="recente">Mais recentes</option>
+                    <option value="data-viagem">Data da viagem</option>
+                    <option value="valor">Maior valor</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reservations Table -->
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Cliente</th>
+                <th>Pacote</th>
+                <th>Data Viagem</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Voucher</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>#RSV-001</strong></td>
+                <td>
+                  <div>
+                    <strong>Maria Santos</strong>
+                    <br>
+                    <small style="color: var(--text-light);">maria.santos@email.com</small>
+                  </div>
+                </td>
+                <td>🏖️ Praias de Maragogi</td>
+                <td>15/10/2025</td>
+                <td><strong>R$ 2.499</strong></td>
+                <td><span class="badge badge-success">Confirmada</span></td>
+                <td>
+                  <button class="btn btn-sm btn-primary" onclick="alert('Gerando voucher...')">
+                    📄 Gerar
+                  </button>
+                </td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><strong>#RSV-002</strong></td>
+                <td>
+                  <div>
+                    <strong>Carlos Oliveira</strong>
+                    <br>
+                    <small style="color: var(--text-light);">carlos.oliveira@email.com</small>
+                  </div>
+                </td>
+                <td>🗼 Paris e Londres</td>
+                <td>20/10/2025</td>
+                <td><strong>R$ 12.990</strong></td>
+                <td><span class="badge badge-success">Confirmada</span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline" onclick="alert('Reenviando voucher por e-mail...')">
+                    ✉️ Reenviar
+                  </button>
+                </td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><strong>#RSV-003</strong></td>
+                <td>
+                  <div>
+                    <strong>Ana Paula Costa</strong>
+                    <br>
+                    <small style="color: var(--text-light);">ana.costa@email.com</small>
+                  </div>
+                </td>
+                <td>🏔️ Machu Picchu</td>
+                <td>25/10/2025</td>
+                <td><strong>R$ 5.799</strong></td>
+                <td><span class="badge badge-warning">Pendente</span></td>
+                <td>
+                  <span style="color: var(--text-light); font-size: var(--font-size-sm);">Aguardando confirmação</span>
+                </td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><strong>#RSV-004</strong></td>
+                <td>
+                  <div>
+                    <strong>Roberto Silva</strong>
+                    <br>
+                    <small style="color: var(--text-light);">roberto.silva@email.com</small>
+                  </div>
+                </td>
+                <td>🏝️ Caribe All Inclusive</td>
+                <td>01/11/2025</td>
+                <td><strong>R$ 8.500</strong></td>
+                <td><span class="badge badge-success">Confirmada</span></td>
+                <td>
+                  <button class="btn btn-sm btn-primary" onclick="alert('Gerando voucher...')">
+                    📄 Gerar
+                  </button>
+                </td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><strong>#RSV-005</strong></td>
+                <td>
+                  <div>
+                    <strong>Fernanda Costa</strong>
+                    <br>
+                    <small style="color: var(--text-light);">fernanda.costa@email.com</small>
+                  </div>
+                </td>
+                <td>🌆 Nova York Completo</td>
+                <td>05/11/2025</td>
+                <td><strong>R$ 9.200</strong></td>
+                <td><span class="badge badge-warning">Pendente</span></td>
+                <td>
+                  <span style="color: var(--text-light); font-size: var(--font-size-sm);">Aguardando pagamento</span>
+                </td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td><strong>#RSV-006</strong></td>
+                <td>
+                  <div>
+                    <strong>Paulo Mendes</strong>
+                    <br>
+                    <small style="color: var(--text-light);">paulo.mendes@email.com</small>
+                  </div>
+                </td>
+                <td>🏖️ Praias de Maragogi</td>
+                <td>10/09/2025</td>
+                <td><strong>R$ 2.499</strong></td>
+                <td><span class="badge badge-info">Concluída</span></td>
+                <td>
+                  <button class="btn btn-sm btn-ghost" onclick="alert('Baixando voucher...')">
+                    📥 Download
+                  </button>
+                </td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: center; margin-top: var(--spacing-xl); gap: var(--spacing-sm);">
+          <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+          <button class="btn btn-primary btn-sm">1</button>
+          <button class="btn btn-outline btn-sm">2</button>
+          <button class="btn btn-outline btn-sm">3</button>
+          <button class="btn btn-outline btn-sm">Próximo</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Action Buttons
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const action = btn.classList.contains('view') ? 'visualizar' : 'editar';
+        const row = btn.closest('tr');
+        const codigo = row.querySelector('strong').textContent;
+        
+        if (action === 'visualizar') {
+          alert(`Visualizando detalhes da reserva: ${codigo}\n\nEm produção, mostraria:\n- Dados completos do cliente\n- Informações do pacote\n- Status do pagamento\n- Histórico de alterações\n- Voucher (se gerado)`);
+        } else {
+          alert(`Editando reserva: ${codigo}`);
+        }
+      });
+    });
+
+    // Filters
+    document.querySelectorAll('select[id^="filter"]').forEach(select => {
+      select.addEventListener('change', () => {
+        console.log('Filtro aplicado:', select.id, select.value);
+      });
+    });
+  </script>
+</body>
+</html>

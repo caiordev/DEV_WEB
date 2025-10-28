@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Crie sua conta no TravelFlow e comece a gerenciar sua agência de viagens.">
+  <title>Cadastro - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-page">
+    <a href="index.html" class="back-to-home">
+      <span>←</span>
+      <span>Voltar para Home</span>
+    </a>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">✈️</div>
+          <h1 class="auth-title">Crie sua conta</h1>
+          <p class="auth-subtitle">Comece gratuitamente e transforme sua agência</p>
+        </div>
+
+        <form class="auth-form" id="cadastroForm">
+          <div class="form-group">
+            <label for="nome" class="form-label required">Nome Completo</label>
+            <input 
+              type="text" 
+              id="nome" 
+              name="nome" 
+              class="form-control" 
+              placeholder="João Silva"
+              required
+              autocomplete="name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label required">E-mail</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-control" 
+              placeholder="seu@email.com"
+              required
+              autocomplete="email"
+            >
+            <span class="form-text">Usaremos este e-mail para comunicações importantes</span>
+          </div>
+
+          <div class="form-group">
+            <label for="agencia" class="form-label required">Nome da Agência</label>
+            <input 
+              type="text" 
+              id="agencia" 
+              name="agencia" 
+              class="form-control" 
+              placeholder="Minha Agência de Viagens"
+              required
+              autocomplete="organization"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="telefone" class="form-label required">Telefone</label>
+            <input 
+              type="tel" 
+              id="telefone" 
+              name="telefone" 
+              class="form-control" 
+              placeholder="(11) 99999-9999"
+              required
+              autocomplete="tel"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label required">Senha</label>
+            <div class="password-input-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-control" 
+                placeholder="••••••••"
+                required
+                autocomplete="new-password"
+                minlength="8"
+              >
+              <button type="button" class="password-toggle" aria-label="Mostrar senha">
+                👁️
+              </button>
+            </div>
+            <span class="form-text">Mínimo de 8 caracteres</span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label required">Confirmar Senha</label>
+            <div class="password-input-wrapper">
+              <input 
+                type="password" 
+                id="confirmPassword" 
+                name="confirmPassword" 
+                class="form-control" 
+                placeholder="••••••••"
+                required
+                autocomplete="new-password"
+                minlength="8"
+              >
+              <button type="button" class="password-toggle-confirm" aria-label="Mostrar senha">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <div class="form-check">
+            <input type="checkbox" id="terms" name="terms" required>
+            <label for="terms">
+              Aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block">
+            Criar Conta Grátis
+          </button>
+        </form>
+
+        <div class="auth-divider">
+          <span>ou cadastre-se com</span>
+        </div>
+
+        <div class="social-login">
+          <button class="social-btn" type="button">
+            <span>🔵</span>
+            <span>Cadastrar com Google</span>
+          </button>
+          <button class="social-btn" type="button">
+            <span>📘</span>
+            <span>Cadastrar com Facebook</span>
+          </button>
+        </div>
+
+        <div class="auth-footer">
+          <p>Já tem uma conta?</p>
+          <a href="login.html">Fazer login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Password Toggle
+    const passwordToggle = document.querySelector('.password-toggle');
+    const passwordInput = document.getElementById('password');
+    const passwordToggleConfirm = document.querySelector('.password-toggle-confirm');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+
+    passwordToggle.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      passwordToggle.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    passwordToggleConfirm.addEventListener('click', () => {
+      const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      confirmPasswordInput.setAttribute('type', type);
+      passwordToggleConfirm.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Phone Mask
+    const telefoneInput = document.getElementById('telefone');
+    telefoneInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+      
+      if (value.length > 6) {
+        value = value.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');
+      } else if (value.length > 2) {
+        value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+      } else if (value.length > 0) {
+        value = value.replace(/^(\d*)/, '($1');
+      }
+      
+      e.target.value = value;
+    });
+
+    // Validação de Email
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    // Mostrar mensagem de erro
+    function showError(input, message) {
+      const formGroup = input.parentElement.parentElement || input.parentElement;
+      let errorElement = formGroup.querySelector('.form-error');
+      
+      if (!errorElement) {
+        errorElement = document.createElement('span');
+        errorElement.className = 'form-error';
+        formGroup.appendChild(errorElement);
+      }
+      
+      errorElement.textContent = message;
+      input.classList.add('error');
+    }
+
+    // Limpar mensagem de erro
+    function clearError(input) {
+      const formGroup = input.parentElement.parentElement || input.parentElement;
+      const errorElement = formGroup.querySelector('.form-error');
+      
+      if (errorElement) {
+        errorElement.remove();
+      }
+      input.classList.remove('error');
+    }
+
+    // Validação em tempo real
+    const nomeInput = document.getElementById('nome');
+    const emailInput = document.getElementById('email');
+    const agenciaInput = document.getElementById('agencia');
+
+    nomeInput.addEventListener('blur', function() {
+      if (this.value.trim().length < 3) {
+        showError(this, 'Nome deve ter pelo menos 3 caracteres');
+      } else {
+        clearError(this);
+      }
+    });
+
+    emailInput.addEventListener('blur', function() {
+      if (this.value && !validateEmail(this.value)) {
+        showError(this, 'Por favor, insira um e-mail válido');
+      } else {
+        clearError(this);
+      }
+    });
+
+    agenciaInput.addEventListener('blur', function() {
+      if (this.value.trim().length < 3) {
+        showError(this, 'Nome da agência deve ter pelo menos 3 caracteres');
+      } else {
+        clearError(this);
+      }
+    });
+
+    telefoneInput.addEventListener('blur', function() {
+      const digits = this.value.replace(/\D/g, '');
+      if (digits.length < 10) {
+        showError(this, 'Telefone inválido. Digite um número completo');
+      } else {
+        clearError(this);
+      }
+    });
+
+    // Indicador de força da senha
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      let strength = 0;
+      let feedback = '';
+
+      if (password.length >= 8) strength++;
+      if (password.length >= 12) strength++;
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+      if (/\d/.test(password)) strength++;
+      if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+      const strengthText = ['Muito fraca', 'Fraca', 'Média', 'Forte', 'Muito forte'];
+      const strengthColor = ['#ef4444', '#f59e0b', '#f59e0b', '#10b981', '#10b981'];
+
+      if (password.length > 0) {
+        feedback = `Força: <span style="color: ${strengthColor[strength]}">${strengthText[strength]}</span>`;
+        
+        const formGroup = this.parentElement.parentElement;
+        let strengthElement = formGroup.querySelector('.password-strength');
+        
+        if (!strengthElement) {
+          strengthElement = document.createElement('span');
+          strengthElement.className = 'form-text password-strength';
+          formGroup.appendChild(strengthElement);
+        }
+        
+        strengthElement.innerHTML = feedback;
+      }
+    });
+
+    // Validar confirmação de senha em tempo real
+    confirmPasswordInput.addEventListener('input', function() {
+      if (this.value && this.value !== passwordInput.value) {
+        showError(this, 'As senhas não coincidem');
+      } else {
+        clearError(this);
+      }
+    });
+
+    // Form Validation
+    const cadastroForm = document.getElementById('cadastroForm');
+    const submitBtn = cadastroForm.querySelector('button[type="submit"]');
+
+    cadastroForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const nome = nomeInput.value.trim();
+      const email = emailInput.value.trim();
+      const agencia = agenciaInput.value.trim();
+      const telefone = telefoneInput.value;
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      const terms = document.getElementById('terms');
+
+      let hasError = false;
+
+      // Validar nome
+      if (!nome || nome.length < 3) {
+        showError(nomeInput, 'Nome deve ter pelo menos 3 caracteres');
+        hasError = true;
+      } else {
+        clearError(nomeInput);
+      }
+
+      // Validar email
+      if (!email) {
+        showError(emailInput, 'O e-mail é obrigatório');
+        hasError = true;
+      } else if (!validateEmail(email)) {
+        showError(emailInput, 'Por favor, insira um e-mail válido');
+        hasError = true;
+      } else {
+        clearError(emailInput);
+      }
+
+      // Validar agência
+      if (!agencia || agencia.length < 3) {
+        showError(agenciaInput, 'Nome da agência deve ter pelo menos 3 caracteres');
+        hasError = true;
+      } else {
+        clearError(agenciaInput);
+      }
+
+      // Validar telefone
+      const digits = telefone.replace(/\D/g, '');
+      if (digits.length < 10) {
+        showError(telefoneInput, 'Telefone inválido');
+        hasError = true;
+      } else {
+        clearError(telefoneInput);
+      }
+
+      // Validar senha
+      if (!password || password.length < 8) {
+        showError(passwordInput, 'A senha deve ter no mínimo 8 caracteres');
+        hasError = true;
+      } else {
+        clearError(passwordInput);
+      }
+
+      // Validar confirmação de senha
+      if (password !== confirmPassword) {
+        showError(confirmPasswordInput, 'As senhas não coincidem');
+        hasError = true;
+      } else {
+        clearError(confirmPasswordInput);
+      }
+
+      // Validar termos
+      if (!terms.checked) {
+        alert('Você precisa aceitar os Termos de Uso e a Política de Privacidade.');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // Simular loading
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⏳</span> Criando conta...';
+
+      // Simulação de cadastro
+      setTimeout(() => {
+        // Salvar dados do usuário no localStorage
+        localStorage.setItem('travelflow_user', JSON.stringify({
+          email: email,
+          name: nome,
+          agencia: agencia,
+          telefone: telefone,
+          role: 'admin',
+          loginTime: new Date().toISOString()
+        }));
+
+        // Feedback de sucesso
+        submitBtn.innerHTML = '✓ Conta criada com sucesso!';
+        submitBtn.style.backgroundColor = '#10b981';
+
+        // Redirecionar
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1000);
+      }, 1500);
+    });
+
+    // Social Login
+    document.querySelectorAll('.social-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        
+        setTimeout(() => {
+          alert('Cadastro social em desenvolvimento.\n\nEm produção, isso redirecionaria para autenticação OAuth.');
+          btn.disabled = false;
+          btn.style.opacity = '1';
+        }, 500);
+      });
+    });
+
+    // Remove error class on input
+    [nomeInput, emailInput, agenciaInput, telefoneInput, passwordInput, confirmPasswordInput].forEach(input => {
+      input.addEventListener('input', () => {
+        clearError(input);
+      });
+    });
+
+    // Adicionar animação de spin
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

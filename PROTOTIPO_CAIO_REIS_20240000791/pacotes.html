@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gerenciamento de Pacotes - TravelFlow">
+  <title>Pacotes - TravelFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✈️</div>
+          <span class="sidebar-logo-text">TravelFlow</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a href="dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="pacotes.html" class="sidebar-link active">
+              <span class="sidebar-icon">📦</span>
+              <span>Pacotes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="clientes.html" class="sidebar-link">
+              <span class="sidebar-icon">👥</span>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="reservas.html" class="sidebar-link">
+              <span class="sidebar-icon">🎫</span>
+              <span>Reservas</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📅</span>
+              <span>Calendário</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">💬</span>
+              <span>Mensagens</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">📈</span>
+              <span>Relatórios</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">⚙️</span>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar">JS</div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name">João Silva</span>
+            <span class="sidebar-user-role">Administrador</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Menu">
+            ☰
+          </button>
+          
+          <div class="topbar-search">
+            <span class="topbar-search-icon">🔍</span>
+            <input type="search" placeholder="Buscar pacotes..." aria-label="Buscar">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" aria-label="Notificações">
+            🔔
+            <span class="notification-badge">3</span>
+          </button>
+          <button class="topbar-icon-btn" aria-label="Mensagens">
+            ✉️
+            <span class="notification-badge">5</span>
+          </button>
+          <a href="login.html" class="topbar-icon-btn" aria-label="Sair" title="Sair">
+            🚪
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <h1 class="page-title">Gerenciar Pacotes</h1>
+          <p class="page-subtitle">Crie, edite e gerencie todos os pacotes de viagens da sua agência</p>
+          <div class="page-actions">
+            <a href="pacote-form.html" class="btn btn-primary">
+              <span>➕</span>
+              <span>Novo Pacote</span>
+            </a>
+            <button class="btn btn-outline">
+              <span>📥</span>
+              <span>Importar</span>
+            </button>
+            <button class="btn btn-outline">
+              <span>📤</span>
+              <span>Exportar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: var(--spacing-xl);">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-3">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="filterStatus" class="form-label">Status</label>
+                  <select id="filterStatus" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="inativo">Inativos</option>
+                    <option value="rascunho">Rascunhos</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="filterDestino" class="form-label">Destino</label>
+                  <select id="filterDestino" class="form-control">
+                    <option value="">Todos os destinos</option>
+                    <option value="nacional">Nacional</option>
+                    <option value="internacional">Internacional</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="filterPreco" class="form-label">Faixa de Preço</label>
+                  <select id="filterPreco" class="form-control">
+                    <option value="">Todos os preços</option>
+                    <option value="0-2000">Até R$ 2.000</option>
+                    <option value="2000-5000">R$ 2.000 - R$ 5.000</option>
+                    <option value="5000-10000">R$ 5.000 - R$ 10.000</option>
+                    <option value="10000+">Acima de R$ 10.000</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="filterOrdem" class="form-label">Ordenar por</label>
+                  <select id="filterOrdem" class="form-control">
+                    <option value="recente">Mais recentes</option>
+                    <option value="antigo">Mais antigos</option>
+                    <option value="preco-asc">Menor preço</option>
+                    <option value="preco-desc">Maior preço</option>
+                    <option value="vendas">Mais vendidos</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Packages Table -->
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Pacote</th>
+                <th>Destino</th>
+                <th>Preço</th>
+                <th>Duração</th>
+                <th>Vendas</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                      🏖️
+                    </div>
+                    <div>
+                      <strong>Praias de Maragogi</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Criado em 01/09/2025</small>
+                    </div>
+                  </div>
+                </td>
+                <td>Alagoas, Brasil</td>
+                <td><strong>R$ 2.499</strong></td>
+                <td>7 dias</td>
+                <td>32 vendas</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                      🗼
+                    </div>
+                    <div>
+                      <strong>Paris e Londres</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Criado em 28/08/2025</small>
+                    </div>
+                  </div>
+                </td>
+                <td>Europa</td>
+                <td><strong>R$ 12.990</strong></td>
+                <td>12 dias</td>
+                <td>28 vendas</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                      🏔️
+                    </div>
+                    <div>
+                      <strong>Machu Picchu</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Criado em 25/08/2025</small>
+                    </div>
+                  </div>
+                </td>
+                <td>Peru</td>
+                <td><strong>R$ 5.799</strong></td>
+                <td>8 dias</td>
+                <td>21 vendas</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                      🏝️
+                    </div>
+                    <div>
+                      <strong>Caribe All Inclusive</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Criado em 20/08/2025</small>
+                    </div>
+                  </div>
+                </td>
+                <td>Cancún, México</td>
+                <td><strong>R$ 8.500</strong></td>
+                <td>10 dias</td>
+                <td>18 vendas</td>
+                <td><span class="badge badge-warning">Poucas vagas</span></td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                      🌆
+                    </div>
+                    <div>
+                      <strong>Nova York Completo</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Criado em 15/08/2025</small>
+                    </div>
+                  </div>
+                </td>
+                <td>Estados Unidos</td>
+                <td><strong>R$ 9.200</strong></td>
+                <td>7 dias</td>
+                <td>15 vendas</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary-light), var(--secondary-color)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                      🦁
+                    </div>
+                    <div>
+                      <strong>Safari na África</strong>
+                      <br>
+                      <small style="color: var(--text-light);">Criado em 10/08/2025</small>
+                    </div>
+                  </div>
+                </td>
+                <td>Quênia e Tanzânia</td>
+                <td><strong>R$ 15.900</strong></td>
+                <td>14 dias</td>
+                <td>8 vendas</td>
+                <td><span class="badge badge-primary">Rascunho</span></td>
+                <td>
+                  <div class="data-list-item-actions">
+                    <button class="action-btn view" title="Visualizar" aria-label="Visualizar">👁️</button>
+                    <button class="action-btn edit" title="Editar" aria-label="Editar">✏️</button>
+                    <button class="action-btn delete" title="Excluir" aria-label="Excluir">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: center; margin-top: var(--spacing-xl); gap: var(--spacing-sm);">
+          <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+          <button class="btn btn-primary btn-sm">1</button>
+          <button class="btn btn-outline btn-sm">2</button>
+          <button class="btn btn-outline btn-sm">3</button>
+          <button class="btn btn-outline btn-sm">Próximo</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Action Buttons
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const action = btn.classList.contains('view') ? 'visualizar' : 
+                      btn.classList.contains('edit') ? 'editar' : 'excluir';
+        const row = btn.closest('tr');
+        const packageName = row.querySelector('strong').textContent;
+        
+        if (action === 'excluir') {
+          if (confirm(`Tem certeza que deseja excluir o pacote "${packageName}"?`)) {
+            alert('Pacote excluído com sucesso!');
+            row.remove();
+          }
+        } else if (action === 'editar') {
+          window.location.href = 'pacote-form.html';
+        } else {
+          alert(`Visualizando detalhes do pacote: ${packageName}`);
+        }
+      });
+    });
+
+    // Filters
+    document.querySelectorAll('select[id^="filter"]').forEach(select => {
+      select.addEventListener('change', () => {
+        console.log('Filtro aplicado:', select.id, select.value);
+        // Em produção, aqui seria feita a filtragem real
+      });
+    });
+  </script>
+</body>
+</html>
