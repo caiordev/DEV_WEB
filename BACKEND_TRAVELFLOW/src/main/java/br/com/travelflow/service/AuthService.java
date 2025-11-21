@@ -7,12 +7,17 @@ import br.com.travelflow.domain.dto.UserLoggedInEvent;
 import br.com.travelflow.domain.entity.User;
 import br.com.travelflow.exception.UserAlreadyExistsException;
 import br.com.travelflow.repository.UserRepository;
+import br.com.travelflow.security.SecurityUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -77,6 +82,14 @@ public class AuthService {
         } catch (DataIntegrityViolationException e){
             throw new UserAlreadyExistsException("Username or Email already exists");
         }
+    }
+
+    public User getCurrentUser() {
+        String username = SecurityUtils.getCurrentUsername()
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não autenticado"));
+
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário encontrado no token, mas não existe no banco"));
     }
 
 }
