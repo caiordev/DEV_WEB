@@ -5,6 +5,7 @@ import br.com.travelflow.domain.dto.LoginRequest;
 import br.com.travelflow.domain.dto.LoginResponse;
 import br.com.travelflow.domain.dto.UserLoggedInEvent;
 import br.com.travelflow.domain.entity.User;
+import br.com.travelflow.exception.UserAlreadyExistsException;
 import br.com.travelflow.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -74,7 +75,7 @@ public class AuthService {
                     persistedUser.getRole().name()
             );
         } catch (DataIntegrityViolationException e){
-            throw new DataIntegrityViolationException("Username or Email already exists");
+            throw new UserAlreadyExistsException("Username or Email already exists");
         }
     }
 
