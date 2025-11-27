@@ -1,287 +1,700 @@
+import { useState, useEffect } from 'react';
 import {
-  Container,
+  Box,
+  Paper,
   Typography,
   Grid,
   Card,
   CardContent,
-  Box,
-  Avatar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   Chip,
-  Button,
+  Divider,
+  IconButton,
   Stack,
+  Button,
+  CircularProgress,
+  TablePagination,
+  Badge,
+  Menu,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  Avatar
 } from '@mui/material';
 import {
-  Flight,
-  Hotel,
-  DirectionsCar,
-  AttachMoney,
-  TrendingUp,
-  CalendarMonth,
+  Search as SearchIcon,
+  FilterList as FilterIcon,
+  AttachMoney as MoneyIcon,
+  DirectionsBus as BusIcon,
+  Person as PersonIcon,
+  CalendarMonth as CalendarIcon,
+  FileDownload as DownloadIcon,
+  PictureAsPdf as PdfIcon,
+  TableChart as ExcelIcon,
+  Notifications as NotificationsIcon,
+  TrendingUp as TrendingUpIcon,
+  Place as PlaceIcon
 } from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-function Dashboard() {
-  const { user } = useAuth();
 
-  const stats = [
-    {
-      title: 'Viagens Realizadas',
-      value: '12',
-      icon: <Flight />,
-      color: 'primary.main',
-      trend: '+15%',
-    },
-    {
-      title: 'Reservas Ativas',
-      value: '3',
-      icon: <Hotel />,
-      color: 'secondary.main',
-      trend: '+8%',
-    },
-    {
-      title: 'Aluguel de Carros',
-      value: '5',
-      icon: <DirectionsCar />,
-      color: 'success.main',
-      trend: '+23%',
-    },
-    {
-      title: 'Economia Total',
-      value: 'R$ 2.450',
-      icon: <AttachMoney />,
-      color: 'warning.main',
-      trend: '+12%',
-    },
-  ];
+export default function Dashboard() {
+  const [soldTrips, setSoldTrips] = useState([]);
+  const [filteredTrips, setFilteredTrips] = useState([]);
+  const [filters, setFilters] = useState({
+    search: '',
+    startDate: null,
+    endDate: null,
+    destination: ''
+  });
+  const [destinations, setDestinations] = useState([]);
+  const [stats, setStats] = useState({
+    totalSales: 0,
+    totalRevenue: 0,
+    totalCustomers: 0,
+    totalDestinations: 0
+  });
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [topDestinations, setTopDestinations] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationAnchor, setNotificationAnchor] = useState(null);
 
-  const upcomingTrips = [
-    {
-      destination: 'Paris, França',
-      date: '15 Dez 2024',
-      status: 'Confirmado',
-      type: 'Voo + Hotel',
-    },
-    {
-      destination: 'Tokyo, Japão',
-      date: '22 Jan 2025',
-      status: 'Pendente',
-      type: 'Voo',
-    },
-    {
-      destination: 'Nova York, EUA',
-      date: '10 Fev 2025',
-      status: 'Confirmado',
-      type: 'Completo',
-    },
-  ];
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+
+
+  // Carregar viagens vendidas da API
+  useEffect(() => {
+    loadVouchers();
+    loadDashboardStats();
+    loadTopDestinations();
+    loadNotifications();
+  }, []);
+
+  const loadVouchers = async () => {
+    setLoading(true);
+    try {
+      const vouchersData = await voucherService.getAllVouchers();
+      setSoldTrips(vouchersData);
+      setFilteredTrips(vouchersData);
+
+      // Extrair destinos únicos para o filtro
+      const uniqueDestinations = new Set();
+      vouchersData.forEach(voucher => {
+        voucher.voucherTrips.forEach(voucherTrip => {
+          uniqueDestinations.add(voucherTrip.trip.destination);
+        });
+      });
+      setDestinations(Array.from(uniqueDestinations));
+    } catch (error) {
+      console.error('Error loading vouchers:', error);
+      // Don't show error as dashboard might be empty initially
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadDashboardStats = async () => {
+    try {
+      const statsData = await dashboardService.getDashboardStats();
+      setStats({
+        totalSales: statsData.totalVouchers || 0,
+        totalRevenue: statsData.totalRevenue || 0,
+        totalCustomers: statsData.uniqueCustomers || 0,
+        totalDestinations: destinations.length
+      });
+    } catch (error) {
+      console.error('Error loading dashboard stats:', error);
+      // Keep default stats
+    }
+  };
+
+
+  const loadTopDestinations = async () => {
+    try {
+      const topDest = await dashboardService.getTopDestinations(5);
+      setTopDestinations(topDest);
+    } catch (error) {
+      console.error('Error loading top destinations:', error);
+      // Calculate from local data if API fails
+      calculateTopDestinationsFromLocal();
+    }
+  };
+
+
+  const calculateTopDestinationsFromLocal = () => {
+    const destinationCount = {};
+    soldTrips.forEach(voucher => {
+      voucher.voucherTrips.forEach(voucherTrip => {
+        const dest = voucherTrip.trip.destination;
+        destinationCount[dest] = (destinationCount[dest] || 0) + 1;
+      });
+    });
+
+
+    const topDest = Object.entries(destinationCount)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5);
+
+    setTopDestinations(topDest);
+  };
+
+
+  // Recalculate top destinations when soldTrips changes
+  useEffect(() => {
+    if (soldTrips.length > 0 && topDestinations.length === 0) {
+      calculateTopDestinationsFromLocal();
+    }
+  }, [soldTrips]);
+
+
+  const loadNotifications = async () => {
+    try {
+      const notifs = await notificationService.getUnreadNotifications();
+      setNotifications(notifs);
+      setUnreadCount(notifs.length);
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+    }
+  };
+
+
+  const handleNotificationClick = (event) => {
+    setNotificationAnchor(event.currentTarget);
+  };
+
+
+  const handleNotificationClose = () => {
+    setNotificationAnchor(null);
+  };
+
+
+  const handleMarkAsRead = async (id) => {
+    try {
+      await notificationService.markAsRead(id);
+      loadNotifications();
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await notificationService.markAllAsRead();
+      loadNotifications();
+      handleNotificationClose();
+    } catch (error) {
+      console.error('Error marking all as read:', error);
+    }
+  };
+
+
+  // Calcular estatísticas localmente (para filtros)
+  const calculateStats = (vouchers) => {
+    const uniqueCustomers = new Set();
+    const uniqueDestinations = new Set();
+    let totalRevenue = 0;
+
+    vouchers.forEach(voucher => {
+      uniqueCustomers.add(voucher.customer.cpf);
+      voucher.voucherTrips.forEach(voucherTrip => {
+        uniqueDestinations.add(voucherTrip.trip.destination);
+      });
+      totalRevenue += voucher.totalValue;
+    });
+
+    setStats({
+      totalSales: vouchers.length,
+      totalRevenue,
+      totalCustomers: uniqueCustomers.size,
+      totalDestinations: uniqueDestinations.size
+    });
+  };
+
+
+  // Aplicar filtros
+  useEffect(() => {
+    let result = [...soldTrips];
+
+    // Filtrar por termo de busca (nome do cliente ou número do voucher)
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      result = result.filter(voucher =>
+        voucher.customer.name.toLowerCase().includes(searchLower) ||
+        voucher.customer.cpf.includes(filters.search) ||
+        voucher.voucherNumber.includes(filters.search)
+      );
+    }
+
+    // Filtrar por data inicial
+    if (filters.startDate) {
+      result = result.filter(voucher =>
+        new Date(voucher.saleDate) >= new Date(filters.startDate)
+      );
+    }
+
+    // Filtrar por data final
+    if (filters.endDate) {
+      result = result.filter(voucher =>
+        new Date(voucher.saleDate) <= new Date(filters.endDate)
+      );
+    }
+
+    // Filtrar por destino
+    if (filters.destination) {
+      result = result.filter(voucher =>
+        voucher.voucherTrips.some(voucherTrip => voucherTrip.trip.destination === filters.destination)
+      );
+    }
+
+    setFilteredTrips(result);
+    calculateStats(result);
+  }, [filters, soldTrips]);
+
+
+  // Manipular mudanças nos filtros
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+
+  // Limpar filtros
+  const handleClearFilters = () => {
+    setFilters({
+      search: '',
+      startDate: null,
+      endDate: null,
+      destination: ''
+    });
+    setPage(0);
+  };
+
+
+  // Paginação
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+
+  // Exportação
+  const handleExportExcel = () => {
+    exportService.exportDashboardToExcel(filteredTrips, stats);
+  };
+
+
+  const handleExportPDF = () => {
+    exportService.exportDashboardToPDF(filteredTrips, stats);
+  };
+
+
+  // Formatar data
+  const formatDate = (dateString) => {
+    try {
+      return dayjs(dateString).format('DD/MM/YYYY');
+    } catch (error) {
+      return 'Data inválida';
+    }
+  };
+
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          Olá, {user?.fullName || user?.username}! 👋
+    <Box sx={{ p: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+          Dashboard de Vendas
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Aqui está um resumo das suas viagens
-        </Typography>
+        <Stack direction="row" spacing={1}>
+          <IconButton
+            color="primary"
+            onClick={handleNotificationClick}
+            sx={{
+              bgcolor: 'background.paper',
+              boxShadow: 1,
+              '&:hover': { bgcolor: 'action.hover' }
+            }}
+          >
+            <Badge badgeContent={unreadCount} color="error">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          <Button
+            variant="outlined"
+            startIcon={<ExcelIcon />}
+            onClick={handleExportExcel}
+            disabled={filteredTrips.length === 0}
+          >
+            Exportar Excel
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<PdfIcon />}
+            onClick={handleExportPDF}
+            disabled={filteredTrips.length === 0}
+          >
+            Exportar PDF
+          </Button>
+        </Stack>
       </Box>
 
-      {/* Stats Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        {stats.map((stat, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Card
-              sx={{
-                height: '100%',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 4,
-                },
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: stat.color,
-                      width: 48,
-                      height: 48,
-                      mr: 2,
-                    }}
-                  >
-                    {stat.icon}
-                  </Avatar>
-                  <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="body2" color="text.secondary">
-                      {stat.title}
-                    </Typography>
-                    <Typography variant="h5" fontWeight={700}>
-                      {stat.value}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <TrendingUp sx={{ fontSize: 16, color: 'success.main', mr: 0.5 }} />
-                  <Typography variant="body2" color="success.main" fontWeight={600}>
-                    {stat.trend}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-                    vs mês anterior
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
 
-      {/* Upcoming Trips */}
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <CalendarMonth sx={{ mr: 1, color: 'primary.main' }} />
-                <Typography variant="h6" fontWeight={600}>
-                  Próximas Viagens
-                </Typography>
-              </Box>
-
-              <Stack spacing={2}>
-                {upcomingTrips.map((trip, index) => (
-                  <Card
-                    key={index}
-                    variant="outlined"
-                    sx={{
-                      p: 2,
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                        bgcolor: 'action.hover',
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        gap: 2,
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="h6" fontWeight={600}>
-                          {trip.destination}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {trip.date} • {trip.type}
-                        </Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                        <Chip
-                          label={trip.status}
-                          color={trip.status === 'Confirmado' ? 'success' : 'warning'}
-                          size="small"
-                        />
-                        <Button variant="outlined" size="small">
-                          Ver Detalhes
-                        </Button>
-                      </Box>
-                    </Box>
-                  </Card>
-                ))}
-              </Stack>
-
-              <Button
-                fullWidth
-                variant="outlined"
-                sx={{ mt: 3 }}
-                startIcon={<Flight />}
+      {/* Notification Menu */}
+      <Menu
+        anchorEl={notificationAnchor}
+        open={Boolean(notificationAnchor)}
+        onClose={handleNotificationClose}
+        PaperProps={{
+          sx: { width: 360, maxHeight: 400 }
+        }}
+      >
+        <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: 1, borderColor: 'divider' }}>
+          <Typography variant="h6">Notificações</Typography>
+          {unreadCount > 0 && (
+            <Button size="small" onClick={handleMarkAllAsRead}>
+              Marcar todas como lidas
+            </Button>
+          )}
+        </Box>
+        <List sx={{ p: 0 }}>
+          {notifications.length === 0 ? (
+            <ListItem>
+              <ListItemText
+                primary="Nenhuma notificação"
+                secondary="Você está em dia!"
+              />
+            </ListItem>
+          ) : (
+            notifications.map((notif) => (
+              <ListItemButton
+                key={notif.id}
+                onClick={() => handleMarkAsRead(notif.id)}
+                sx={{ borderBottom: 1, borderColor: 'divider' }}
               >
-                Planejar Nova Viagem
-              </Button>
+                <ListItemText
+                  primary={notif.title || notif.message}
+                  secondary={notif.createdAt ? dayjs(notif.createdAt).format('DD/MM/YYYY HH:mm') : ''}
+                  primaryTypographyProps={{ fontWeight: 'medium' }}
+                />
+              </ListItemButton>
+            ))
+          )}
+        </List>
+      </Menu>
+
+      {/* Cards de estatísticas */}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ height: '100%', bgcolor: 'primary.light' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h6" color="white">Vendas</Typography>
+                <BusIcon sx={{ color: 'white', fontSize: 40 }} />
+              </Box>
+              <Typography variant="h3" color="white">{stats.totalSales}</Typography>
+              <Typography variant="body2" color="white">Total de vouchers emitidos</Typography>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
-          <Card sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ height: '100%', bgcolor: 'success.light' }}>
             <CardContent>
-              <Typography variant="h6" fontWeight={600} gutterBottom>
-                Perfil
-              </Typography>
-              <Box sx={{ textAlign: 'center', py: 2 }}>
-                <Avatar
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    bgcolor: 'primary.main',
-                    fontSize: '2rem',
-                    mx: 'auto',
-                    mb: 2,
-                  }}
-                >
-                  {(user?.fullName || user?.username)?.charAt(0).toUpperCase()}
-                </Avatar>
-                <Typography variant="h6" fontWeight={600}>
-                  {user?.fullName || user?.username}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  @{user?.username}
-                </Typography>
-                <Chip
-                  label={user?.role || 'Usuário'}
-                  color="primary"
-                  size="small"
-                  sx={{ mt: 2 }}
-                />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h6" color="white">Receita</Typography>
+                <MoneyIcon sx={{ color: 'white', fontSize: 40 }} />
               </Box>
-              <Button fullWidth variant="outlined" sx={{ mt: 2 }}>
-                Editar Perfil
-              </Button>
+              <Typography variant="h3" color="white">R$ {stats.totalRevenue.toFixed(2)}</Typography>
+              <Typography variant="body2" color="white">Valor total das vendas</Typography>
             </CardContent>
           </Card>
+        </Grid>
 
-          <Card>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ height: '100%', bgcolor: 'info.light' }}>
             <CardContent>
-              <Typography variant="h6" fontWeight={600} gutterBottom>
-                Dicas Rápidas
-              </Typography>
-              <Stack spacing={2}>
-                <Box>
-                  <Typography variant="body2" fontWeight={600}>
-                    ✈️ Reserve com antecedência
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Economize até 40% em passagens
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2" fontWeight={600}>
-                    🏨 Programa de pontos
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Acumule pontos em cada reserva
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2" fontWeight={600}>
-                    🎫 Ofertas exclusivas
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Confira as promoções da semana
-                  </Typography>
-                </Box>
-              </Stack>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h6" color="white">Clientes</Typography>
+                <PersonIcon sx={{ color: 'white', fontSize: 40 }} />
+              </Box>
+              <Typography variant="h3" color="white">{stats.totalCustomers}</Typography>
+              <Typography variant="body2" color="white">Clientes únicos</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ height: '100%', bgcolor: 'warning.light' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h6" color="white">Destinos</Typography>
+                <CalendarIcon sx={{ color: 'white', fontSize: 40 }} />
+              </Box>
+              <Typography variant="h3" color="white">{stats.totalDestinations}</Typography>
+              <Typography variant="body2" color="white">Destinos vendidos</Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-    </Container>
+
+
+      {/* Top Destinations Section */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12}>
+          <Paper elevation={3} sx={{ p: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <TrendingUpIcon sx={{ mr: 1, color: 'primary.main', fontSize: 28 }} />
+              <Typography variant="h5" fontWeight="bold">
+                Destinos Mais Vendidos
+              </Typography>
+            </Box>
+            {topDestinations.length > 0 ? (
+              <ResponsiveContainer width="100%" height={350}>
+                <BarChart data={topDestinations} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="name"
+                    angle={-45}
+                    textAnchor="end"
+                    height={100}
+                    style={{ fontSize: '14px' }}
+                  />
+                  <YAxis style={{ fontSize: '14px' }} />
+                  <Tooltip
+                    contentStyle={{ fontSize: '14px' }}
+                    cursor={{ fill: 'rgba(136, 132, 216, 0.1)' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '14px' }} />
+                  <Bar dataKey="value" fill="#8884d8" name="Vendas" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 350 }}>
+                <Typography color="textSecondary" variant="h6">Nenhum dado disponível</Typography>
+              </Box>
+            )}
+          </Paper>
+        </Grid>
+
+
+        <Grid item xs={12}>
+          <Paper elevation={3} sx={{ p: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <PlaceIcon sx={{ mr: 1, color: 'primary.main', fontSize: 28 }} />
+              <Typography variant="h5" fontWeight="bold">
+                Distribuição de Destinos
+              </Typography>
+            </Box>
+            {topDestinations.length > 0 ? (
+              <ResponsiveContainer width="100%" height={350}>
+                <PieChart>
+                  <Pie
+                    data={topDestinations}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={true}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={120}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {topDestinations.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ fontSize: '14px' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 350 }}>
+                <Typography color="textSecondary" variant="h6">Nenhum dado disponível</Typography>
+              </Box>
+            )}
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* Filtros */}
+      <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+        <Typography variant="h6" gutterBottom>
+          Filtros
+        </Typography>
+
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              fullWidth
+              label="Buscar por cliente ou voucher"
+              name="search"
+              value={filters.search}
+              onChange={handleFilterChange}
+              InputProps={{
+                endAdornment: <SearchIcon position="end" />
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+              <DatePicker
+                label="Data inicial"
+                value={filters.startDate}
+                onChange={(date) => setFilters(prev => ({ ...prev, startDate: date }))}
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+              <DatePicker
+                label="Data final"
+                value={filters.endDate}
+                onChange={(date) => setFilters(prev => ({ ...prev, endDate: date }))}
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={2}>
+            <FormControl fullWidth>
+              <InputLabel>Destino</InputLabel>
+              <Select
+                name="destination"
+                value={filters.destination}
+                onChange={handleFilterChange}
+                label="Destino"
+              >
+                <MenuItem value="">Todos</MenuItem>
+                {destinations.map((destination) => (
+                  <MenuItem key={destination} value={destination}>
+                    {destination}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={1}>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={handleClearFilters}
+            >
+              Limpar
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
+
+      {/* Tabela de vendas */}
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          Vendas Realizadas
+        </Typography>
+
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Voucher</TableCell>
+                    <TableCell>Data</TableCell>
+                    <TableCell>Cliente</TableCell>
+                    <TableCell>Destinos</TableCell>
+                    <TableCell align="right">Valor</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredTrips.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} align="center">
+                        Nenhuma venda encontrada
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredTrips
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((voucher) => (
+                        <TableRow key={voucher.id}>
+                          <TableCell>{voucher.voucherNumber}</TableCell>
+                          <TableCell>{formatDate(voucher.saleDate)}</TableCell>
+                          <TableCell>
+                            <Typography variant="body2">{voucher.customer.name}</Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              CPF: {voucher.customer.cpf}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Stack direction="row" spacing={1} flexWrap="wrap">
+                              {voucher.voucherTrips.map((voucherTrip) => (
+                                <Chip
+                                  key={voucherTrip.id}
+                                  label={voucherTrip.trip.destination}
+                                  size="small"
+                                  sx={{ my: 0.5 }}
+                                />
+                              ))}
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Typography fontWeight="bold">
+                              R$ {voucher.totalValue.toFixed(2)}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              component="div"
+              count={filteredTrips.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              labelRowsPerPage="Linhas por página:"
+              labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+            />
+          </>
+        )}
+      </Paper>
+    </Box>
   );
 }
-
-export default Dashboard;
