@@ -1,0 +1,107 @@
+FRONTEND_TRAVELFLOW/
+│
+├── public/                          # Arquivos públicos estáticos
+│   └── vite.svg
+│
+├── src/                             # Código fonte da aplicação
+│   │
+│   ├── assets/                      # Recursos estáticos (imagens, ícones)
+│   │   └── react.svg
+│   │
+│   ├── components/                  # Componentes reutilizáveis
+│   │   ├── common/                  # Componentes comuns/genéricos
+│   │   │   └── ProtectedRoute.jsx   # HOC para rotas protegidas
+│   │   │
+│   │   ├── layout/                  # Componentes de layout
+│   │   │   ├── Header.jsx           # Cabeçalho da aplicação
+│   │   │   └── MainLayout.jsx       # Layout principal com Header
+│   │   │
+│   │   └── ThemeDemo.jsx            # Componente demo do Material UI
+│   │
+│   ├── contexts/                    # Context API - Estado global
+│   │   └── AuthContext.jsx          # Contexto de autenticação
+│   │
+│   ├── pages/                       # Páginas da aplicação
+│   │   ├── Dashboard/
+│   │   │   └── Dashboard.jsx        # Página do dashboard (protegida)
+│   │   │
+│   │   ├── Home/
+│   │   │   └── Home.jsx             # Landing page (pública)
+│   │   │
+│   │   └── Login/
+│   │       └── Login.jsx            # Página de login (pública)
+│   │
+│   ├── routes/                      # Configuração de rotas
+│   │   └── index.jsx                # Definição de todas as rotas
+│   │
+│   ├── App.css                      # Estilos do App (legado)
+│   ├── App.jsx                      # Componente raiz da aplicação
+│   ├── index.css                    # Estilos globais + CSS Variables
+│   ├── main.jsx                     # Ponto de entrada (ThemeProvider)
+│   └── theme.js                     # Configuração do tema Material UI
+│
+├── .gitignore                       # Arquivos ignorados pelo Git
+├── ARQUITETURA.md                   # Documentação da arquitetura
+├── eslint.config.js                 # Configuração do ESLint
+├── index.html                       # HTML principal
+├── MATERIAL_UI_SETUP.md            # Guia do Material UI
+├── package.json                     # Dependências e scripts
+├── package-lock.json                # Lock de dependências
+├── README.md                        # Documentação principal
+└── vite.config.js                   # Configuração do Vite
+
+═══════════════════════════════════════════════════════════════════
+
+ARQUITETURA DE PASTAS - PADRÕES
+
+📁 components/
+  ├── common/      → Componentes genéricos reutilizáveis
+  └── layout/      → Componentes de estrutura/layout
+
+📁 contexts/       → Context API para estado global
+
+📁 pages/          → Páginas organizadas por feature
+  └── [Feature]/   → Cada feature em sua pasta
+      └── [Feature].jsx
+
+📁 routes/         → Configuração centralizada de rotas
+
+═══════════════════════════════════════════════════════════════════
+
+FLUXO DE NAVEGAÇÃO
+
+1. main.jsx
+   └── Inicializa ThemeProvider + CssBaseline
+       └── App.jsx
+           └── AuthProvider (contexto de autenticação)
+               └── AppRoutes (sistema de rotas)
+                   └── MainLayout (Header + Outlet)
+                       └── [Páginas]
+
+═══════════════════════════════════════════════════════════════════
+
+ROTAS
+
+Públicas:
+  / ..................... Home (landing page)
+  /login ................ Login (redireciona se autenticado)
+
+Protegidas (requer autenticação):
+  /dashboard ............ Dashboard principal
+  /profile .............. Perfil do usuário
+
+Fallback:
+  * ..................... Redireciona para /
+
+═══════════════════════════════════════════════════════════════════
+
+TECNOLOGIAS
+
+⚛️  React 19.2.0 ......... Biblioteca UI
+🎨 Material UI 5.x ...... Componentes prontos
+🛣️  React Router 6.x ..... Roteamento
+⚡ Vite 7.x ............. Build tool
+💅 Emotion .............. CSS-in-JS
+🔍 ESLint ............... Code quality
+
+═══════════════════════════════════════════════════════════════════
