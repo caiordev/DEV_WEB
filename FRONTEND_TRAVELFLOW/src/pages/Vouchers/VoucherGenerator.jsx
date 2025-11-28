@@ -664,7 +664,7 @@ export default function VoucherGenerator() {
             
             <CardContent>
               <Typography variant="h6" gutterBottom>Informações do Cliente:</Typography>
-              <Grid container spacing={2} sx={{ mb: 3, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+              <Grid container spacing={2} sx={{ mb: 3, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
                 <Grid item xs={12} sm={4}>
                   <Typography variant="subtitle2" fontWeight="bold">Nome:</Typography>
                   <Typography variant="body1">{customerInfo.name}</Typography>
@@ -685,8 +685,8 @@ export default function VoucherGenerator() {
               <Typography variant="h6" gutterBottom>Destinos Incluídos:</Typography>
               
               {selectedTripObjects.map((trip, index) => (
-                <Card key={trip.id} sx={{ mb: 3, border: '1px solid #eee' }}>
-                  <Box sx={{ bgcolor: 'grey.100', p: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Card key={trip.id} sx={{ mb: 3, border: 1, borderColor: 'divider' }}>
+                  <Box sx={{ bgcolor: 'action.hover', p: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant="subtitle1" fontWeight="bold">Destino {index + 1}: {trip.destination}</Typography>
                   </Box>
                   
@@ -725,7 +725,7 @@ export default function VoucherGenerator() {
                 </Card>
               ))}
               
-              <Box sx={{ bgcolor: 'grey.100', p: 2, mt: 2, borderRadius: 1 }}>
+              <Box sx={{ bgcolor: 'action.hover', p: 2, mt: 2, borderRadius: 1 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="subtitle1" fontWeight="bold">Total de destinos:</Typography>
