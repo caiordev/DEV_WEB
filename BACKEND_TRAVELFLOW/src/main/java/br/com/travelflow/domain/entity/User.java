@@ -1,5 +1,6 @@
 package br.com.travelflow.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +16,7 @@ public class User {
     private Long id;
 
     @NotBlank(message = "Username is required")
-    @Size(max=20, message = "Username must not exceed 20 characters" )
+    @Size(max = 20, message = "Username must not exceed 20 characters")
     @Column(nullable = false, unique = true, length = 20)
     private String username;
 
@@ -36,7 +37,7 @@ public class User {
     private String fullName;
 
     @Column(nullable = false)
-    private Boolean active=true;
+    private Boolean active = true;
 
     private LocalDateTime lastLogin;
 
@@ -47,7 +48,13 @@ public class User {
 
     private UserRole role = UserRole.USER;
 
-    public User() {}
+    @JsonBackReference(value = "agency-users")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agency_id")
+    private Agency agency;
+
+    public User() {
+    }
 
     public User(String username, String email, String password, String fullName, UserRole role) {
         this.username = username;
@@ -146,5 +153,13 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Agency getAgency() {
+        return agency;
+    }
+
+    public void setAgency(Agency agency) {
+        this.agency = agency;
     }
 }

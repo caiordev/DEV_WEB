@@ -17,7 +17,7 @@ public class JwtService {
     @Value("${jwt.secret:mySecretKeyThatIsAtLeast32CharactersLongForHS256Algorithm}")
     private String secret;
 
-    @Value("${jwt.expiration:86400000}") // 24 hours in milliseconds
+    @Value("${jwt.expiration:86400000}")
     private Long expiration;
 
     public String extractUsername(String token) {
@@ -86,7 +86,7 @@ public class JwtService {
             final String extractedUsername = extractUsername(token);
             return extractedUsername.equals(username) && !isTokenExpired(token);
         } catch (JwtException | IllegalArgumentException e) {
-            return false; // token inválido
+            return false;
         }
     }
 
