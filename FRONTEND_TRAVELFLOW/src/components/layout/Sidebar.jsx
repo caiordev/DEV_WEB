@@ -41,6 +41,7 @@ function Sidebar() {
     { text: 'Destinos', icon: <FlightIcon />, path: '/trips' },
     { text: 'Vouchers', icon: <VoucherIcon />, path: '/vouchers' },
     { text: 'Pacotes', icon: <PackageIcon />, path: '/packages' },
+    { text: 'Clientes', icon: <PeopleIcon />, path: '/customers' },
   ];
 
   const handleDrawerToggle = () => {

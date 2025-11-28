@@ -134,6 +134,77 @@ const exportService = {
       console.error('Error exporting vouchers to Excel:', error);
       throw new Error('Erro ao exportar vouchers');
     }
+  },
+
+  exportCustomerHistoryToPDF: (customer, vouchers) => {
+    try {
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text('Histórico de Vouchers - TravelFlow', 14, 22);
+
+      doc.setFontSize(11);
+      doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 14, 30);
+
+      doc.setFontSize(14);
+      doc.text('Informações do Cliente', 14, 42);
+      
+      doc.autoTable({
+        startY: 48,
+        head: [['Campo', 'Valor']],
+        body: [
+          ['Nome', customer.name],
+          ['CPF', customer.cpf],
+          ['Telefone', customer.phone],
+          ['Email', customer.email || 'N/A']
+        ],
+        theme: 'grid',
+        headStyles: { fillColor: [25, 118, 210] }
+      });
+
+      const totalSpent = vouchers.reduce((sum, v) => sum + v.totalValue, 0);
+      const totalDestinations = vouchers.reduce((sum, v) => sum + v.voucherTrips.length, 0);
+
+      doc.setFontSize(14);
+      doc.text('Estatísticas', 14, doc.lastAutoTable.finalY + 15);
+
+      doc.autoTable({
+        startY: doc.lastAutoTable.finalY + 20,
+        head: [['Métrica', 'Valor']],
+        body: [
+          ['Total de Vouchers', vouchers.length.toString()],
+          ['Total Gasto', `R$ ${totalSpent.toFixed(2)}`],
+          ['Total de Destinos', totalDestinations.toString()]
+        ],
+        theme: 'grid',
+        headStyles: { fillColor: [25, 118, 210] }
+      });
+
+      doc.setFontSize(14);
+      doc.text('Histórico de Vouchers', 14, doc.lastAutoTable.finalY + 15);
+
+      const tableData = vouchers.map(voucher => [
+        voucher.voucherNumber,
+        new Date(voucher.saleDate).toLocaleDateString('pt-BR'),
+        voucher.voucherTrips.map(vt => vt.trip.destination).join(', '),
+        `R$ ${voucher.totalValue.toFixed(2)}`,
+        voucher.status || 'Ativo'
+      ]);
+
+      doc.autoTable({
+        startY: doc.lastAutoTable.finalY + 20,
+        head: [['Voucher', 'Data', 'Destinos', 'Valor', 'Status']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [25, 118, 210] },
+        styles: { fontSize: 9 }
+      });
+
+      doc.save(`historico_${customer.cpf}_${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (error) {
+      console.error('Error exporting customer history to PDF:', error);
+      throw new Error('Erro ao exportar histórico do cliente');
+    }
   }
 };
 
