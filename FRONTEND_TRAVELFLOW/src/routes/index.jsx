@@ -8,8 +8,8 @@ import MainLayout from '../components/layout/MainLayout';
 import Login from '../pages/Login/Login';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import TripManagement from '../pages/Trips/TripManagement';
+import VoucherGenerator from '../pages/Vouchers/VoucherGenerator';
 
-// Components
 import ProtectedRoute from '../components/common/ProtectedRoute';
 
 function AppRoutes() {
@@ -38,6 +38,7 @@ function AppRoutes() {
         >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/trips" element={<TripManagement />} />
+          <Route path="/vouchers" element={<VoucherGenerator />} />
           <Route path="/profile" element={<Dashboard />} />
         </Route>
 

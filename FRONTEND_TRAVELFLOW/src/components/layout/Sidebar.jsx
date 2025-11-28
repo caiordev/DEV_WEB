@@ -38,6 +38,7 @@ function Sidebar() {
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
     { text: 'Destinos', icon: <FlightIcon />, path: '/trips' },
+    { text: 'Vouchers', icon: <VoucherIcon />, path: '/vouchers' },
   ];
 
   const handleDrawerToggle = () => {
