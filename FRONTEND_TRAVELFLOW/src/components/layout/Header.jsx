@@ -23,10 +23,10 @@ function Header() {
   };
 
   return (
-    <AppBar position="static" elevation={1}>
+    <AppBar position="static" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700 }}>
-          TravelFlow
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'text.primary' }}>
+          Painel Administrativo
         </Typography>
 
         {isAuthenticated ? (

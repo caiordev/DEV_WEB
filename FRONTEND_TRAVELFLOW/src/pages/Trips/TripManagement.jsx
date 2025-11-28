@@ -1,0 +1,565 @@
+import { useState, useRef, useEffect } from 'react';
+import tripService from '../../services/tripService.js';
+import { 
+  Box, 
+  TextField, 
+  Button, 
+  Grid, 
+  Typography, 
+  Paper,
+  Snackbar,
+  Alert,
+  IconButton,
+  InputAdornment,
+  Divider,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  CircularProgress,
+  Alert as MuiAlert
+} from '@mui/material';
+import { 
+  CloudUpload as CloudUploadIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Save as SaveIcon,
+  Close as CloseIcon
+} from '@mui/icons-material';
+
+export default function TripManagement() {
+  const initialFormState = {
+    id: null,
+    destination: '',
+    location: '',
+    pricePerPerson: '',
+    description: ''
+  };
+  
+  const [formData, setFormData] = useState(initialFormState);
+  const [trips, setTrips] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
+  
+  const [errors, setErrors] = useState({});
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [loading, setLoading] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [tripToDelete, setTripToDelete] = useState(null);
+  
+  useEffect(() => {
+    loadTrips();
+  }, []);
+  
+  const loadTrips = async () => {
+    setLoading(true);
+    try {
+      const tripsData = await tripService.getAllTrips();
+      setTrips(tripsData);
+    } catch (error) {
+      console.error('Error loading trips:', error);
+      showSnackbar('Erro ao carregar destinos', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const showSnackbar = (message, severity = 'success') => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setOpenSnackbar(true);
+  };
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+    
+
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: null
+      });
+    }
+  };
+  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        showSnackbar('Imagem muito grande. Tamanho máximo: 5MB', 'error');
+        return;
+      }
+      
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      
+      if (errors.image) {
+        setErrors({ ...errors, image: null });
+      }
+    }
+  };
+
+  const handleImageUploadClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    
+    if (!formData.destination) newErrors.destination = 'Destino é obrigatório';
+    if (!formData.location) newErrors.location = 'Localização é obrigatória';
+    if (!formData.description) newErrors.description = 'Descrição é obrigatória';
+    if (!formData.pricePerPerson) {
+      newErrors.pricePerPerson = 'Preço é obrigatório';
+    } else if (isNaN(Number(formData.pricePerPerson)) || Number(formData.pricePerPerson) <= 0) {
+      newErrors.pricePerPerson = 'Preço deve ser um valor numérico positivo';
+    }
+    
+    if (!editMode && !selectedImage) {
+      newErrors.image = 'Imagem é obrigatória';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+  const resetForm = () => {
+    setFormData(initialFormState);
+    setSelectedImage(null);
+    setImagePreview(null);
+    setEditMode(false);
+    setErrors({});
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (validate()) {
+      setLoading(true);
+      try {
+        const tripData = {
+          destination: formData.destination,
+          location: formData.location,
+          pricePerPerson: parseFloat(formData.pricePerPerson),
+          description: formData.description,
+          imageUrl: imagePreview || formData.imageUrl
+        };
+
+        if (editMode) {
+          await tripService.updateTrip(formData.id, tripData);
+          showSnackbar('Destino atualizado com sucesso!', 'success');
+        } else {
+          await tripService.createTrip(tripData);
+          showSnackbar('Novo destino cadastrado com sucesso!', 'success');
+        }
+        
+        resetForm();
+        loadTrips(); 
+      } catch (error) {
+        console.error('Error saving trip:', error);
+        showSnackbar('Erro ao salvar destino: ' + (error.response?.data?.message || error.message), 'error');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+  
+  const handleEdit = (trip) => {
+    setFormData({
+      id: trip.id,
+      destination: trip.destination,
+      location: trip.location,
+      pricePerPerson: trip.pricePerPerson.toString(),
+      description: trip.description,
+      imageUrl: trip.imageUrl
+    });
+    setImagePreview(trip.imageUrl);
+    setEditMode(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  const handleDeleteClick = (trip) => {
+    setTripToDelete(trip);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!tripToDelete) return;
+    
+    setLoading(true);
+    try {
+      await tripService.deleteTrip(tripToDelete.id);
+      showSnackbar('Destino removido com sucesso!', 'success');
+      setOpenDeleteDialog(false);
+      setTripToDelete(null);
+      loadTrips(); 
+    } catch (error) {
+      console.error('Error deleting trip:', error);
+      showSnackbar('Erro ao remover destino: ' + (error.response?.data?.message || error.message), 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+  
+  return (
+    <Box>
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: 700, color: 'primary.main' }}>
+        Gerenciamento de Destinos
+      </Typography>
+      
+      {/* Formulário de Cadastro/Edição */}
+      <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
+        <Box sx={{ mb: 3, pb: 2, borderBottom: '2px solid', borderColor: 'primary.main' }}>
+          <Typography variant="h5" sx={{ fontWeight: 600, color: 'primary.main' }}>
+            {editMode ? 'Editar Destino Turístico' : 'Cadastro de Destino Turístico'}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {editMode ? 'Atualize as informações do destino' : 'Preencha os dados do novo destino turístico'}
+          </Typography>
+        </Box>
+        
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          {/* Seção: Informações Básicas */}
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+            Informações do Destino
+          </Typography>
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                required
+                fullWidth
+                id="destination"
+                name="destination"
+                label="Nome do Destino"
+                placeholder="Ex: Praia do Forte, Fernando de Noronha"
+                value={formData.destination}
+                onChange={handleChange}
+                error={!!errors.destination}
+                helperText={errors.destination || 'Digite o nome principal do destino'}
+              />
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <TextField
+                required
+                fullWidth
+                id="location"
+                name="location"
+                label="Localização Completa"
+                placeholder="Cidade, Estado, País"
+                value={formData.location}
+                onChange={handleChange}
+                error={!!errors.location}
+                helperText={errors.location || 'Ex: Salvador, Bahia, Brasil'}
+              />
+            </Grid>
+          </Grid>
+            
+          {/* Seção: Precificação */}
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+            Precificação
+          </Typography>
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                required
+                fullWidth
+                id="pricePerPerson"
+                name="pricePerPerson"
+                label="Preço por Pessoa"
+                placeholder="0.00"
+                type="number"
+                value={formData.pricePerPerson}
+                onChange={handleChange}
+                error={!!errors.pricePerPerson}
+                helperText={errors.pricePerPerson || 'Valor individual do pacote'}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+                }}
+              />
+            </Grid>
+          </Grid>
+            
+          {/* Seção: Descrição */}
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+            Descrição
+          </Typography>
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="description"
+                name="description"
+                label="Descrição Detalhada"
+                placeholder="Descreva os atrativos, atividades incluídas, diferenciais do destino..."
+                multiline
+                rows={4}
+                value={formData.description}
+                onChange={handleChange}
+                error={!!errors.description}
+                helperText={errors.description || 'Forneça uma descrição atrativa e completa do destino'}
+              />
+            </Grid>
+          </Grid>
+            
+          {/* Seção: Imagem */}
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+            Imagem do Destino
+          </Typography>
+          <Grid container spacing={3}>
+            
+            <Grid item xs={12}>
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                ref={fileInputRef}
+                onChange={handleImageChange}
+              />
+              <Box 
+                sx={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  gap: 2,
+                  p: 3,
+                  border: '2px dashed',
+                  borderColor: imagePreview ? 'primary.main' : 'grey.300',
+                  borderRadius: 2,
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    borderColor: 'primary.main'
+                  }
+                }}
+              >
+                {!imagePreview ? (
+                  <>
+                    <CloudUploadIcon sx={{ fontSize: 48, color: 'text.secondary' }} />
+                    <Typography variant="body1" color="text.secondary" align="center">
+                      Adicione uma imagem atrativa do destino
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      component="span"
+                      onClick={handleImageUploadClick}
+                      startIcon={<CloudUploadIcon />}
+                      size="large"
+                    >
+                      Selecionar Imagem
+                    </Button>
+                    <Typography variant="caption" color="text.secondary">
+                      Formatos aceitos: JPG, PNG, GIF (Máx: 5MB)
+                    </Typography>
+                  </>
+                ) : (
+                  <Box sx={{ width: '100%', textAlign: 'center' }}>
+                    <Box sx={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
+                      <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        style={{ 
+                          maxWidth: '100%', 
+                          maxHeight: '300px',
+                          borderRadius: '12px',
+                          boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+                        }} 
+                      />
+                    </Box>
+                    <Typography variant="body2" sx={{ mt: 2, mb: 1, fontWeight: 500 }}>
+                      {selectedImage?.name || 'Imagem atual'}
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      onClick={handleImageUploadClick}
+                      startIcon={<EditIcon />}
+                      size="small"
+                    >
+                      Alterar Imagem
+                    </Button>
+                  </Box>
+                )}
+                {errors.image && (
+                  <Alert severity="error" sx={{ width: '100%' }}>
+                    {errors.image}
+                  </Alert>
+                )}
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12}>
+              <Divider sx={{ my: 3 }} />
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+                {editMode && (
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    size="large"
+                    onClick={resetForm}
+                    startIcon={<CloseIcon />}
+                    sx={{ px: 4 }}
+                  >
+                    Cancelar
+                  </Button>
+                )}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
+                  disabled={loading}
+                  sx={{ 
+                    px: 5,
+                    py: 1.5,
+                    fontWeight: 600,
+                    boxShadow: 3,
+                    '&:hover': {
+                      boxShadow: 6
+                    }
+                  }}
+                >
+                  {loading ? 'Salvando...' : (editMode ? 'Salvar Alterações' : 'Cadastrar Destino')}
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
+      
+      {/* Lista de Destinos Cadastrados */}
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+          Destinos Cadastrados
+        </Typography>
+        
+        {loading && trips.length === 0 ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : trips.length === 0 ? (
+          <Typography color="text.secondary" align="center" sx={{ py: 4 }}>
+            Nenhum destino cadastrado ainda.
+          </Typography>
+        ) : (
+          <Grid container spacing={3}>
+            {trips.map((trip) => (
+              <Grid item xs={12} sm={6} md={4} key={trip.id}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  {trip.imageUrl && (
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={trip.imageUrl}
+                      alt={trip.destination}
+                      sx={{ objectFit: 'cover' }}
+                    />
+                  )}
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
+                      {trip.destination}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      <strong>Localização:</strong> {trip.location}
+                    </Typography>
+                    <Typography variant="body2" color="primary.main" gutterBottom sx={{ fontWeight: 600 }}>
+                      <strong>Preço:</strong> R$ {trip.pricePerPerson?.toFixed(2)}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      {trip.description.length > 100 
+                        ? `${trip.description.substring(0, 100)}...` 
+                        : trip.description}
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
+                    <Button 
+                      size="small" 
+                      startIcon={<EditIcon />}
+                      onClick={() => handleEdit(trip)}
+                      variant="outlined"
+                    >
+                      Editar
+                    </Button>
+                    <Button 
+                      size="small" 
+                      color="error" 
+                      startIcon={<DeleteIcon />}
+                      onClick={() => handleDeleteClick(trip)}
+                      variant="outlined"
+                    >
+                      Excluir
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Paper>
+
+      {/* Snackbar para mensagens */}
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      
+      {/* Dialog de Confirmação de Exclusão */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => !loading && setOpenDeleteDialog(false)}
+      >
+        <DialogTitle>Confirmar Exclusão</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Tem certeza que deseja excluir o destino <strong>{tripToDelete?.destination}</strong>?
+          </DialogContentText>
+          <MuiAlert severity="warning" sx={{ mt: 2 }}>
+            Esta ação não pode ser desfeita! Todos os dados relacionados a este destino serão removidos.
+          </MuiAlert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDeleteDialog(false)} disabled={loading}>
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+            disabled={loading}
+            startIcon={loading ? <CircularProgress size={20} /> : <DeleteIcon />}
+          >
+            {loading ? 'Excluindo...' : 'Confirmar Exclusão'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+}

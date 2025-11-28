@@ -7,6 +7,7 @@ import MainLayout from '../components/layout/MainLayout';
 // Pages
 import Login from '../pages/Login/Login';
 import Dashboard from '../pages/Dashboard/Dashboard';
+import TripManagement from '../pages/Trips/TripManagement';
 
 // Components
 import ProtectedRoute from '../components/common/ProtectedRoute';
@@ -36,6 +37,7 @@ function AppRoutes() {
           }
         >
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/trips" element={<TripManagement />} />
           <Route path="/profile" element={<Dashboard />} />
         </Route>
 
