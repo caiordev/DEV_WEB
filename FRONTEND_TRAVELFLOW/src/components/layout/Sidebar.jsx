@@ -18,6 +18,7 @@ import {
   Dashboard as DashboardIcon,
   Flight as FlightIcon,
   ConfirmationNumber as VoucherIcon,
+  CardGiftcard as PackageIcon,
   People as PeopleIcon,
   Settings as SettingsIcon,
   ChevronLeft as ChevronLeftIcon,
@@ -39,6 +40,7 @@ function Sidebar() {
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
     { text: 'Destinos', icon: <FlightIcon />, path: '/trips' },
     { text: 'Vouchers', icon: <VoucherIcon />, path: '/vouchers' },
+    { text: 'Pacotes', icon: <PackageIcon />, path: '/packages' },
   ];
 
   const handleDrawerToggle = () => {

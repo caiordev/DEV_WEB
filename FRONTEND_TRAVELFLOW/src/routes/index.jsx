@@ -9,6 +9,7 @@ import Login from '../pages/Login/Login';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import TripManagement from '../pages/Trips/TripManagement';
 import VoucherGenerator from '../pages/Vouchers/VoucherGenerator';
+import TravelPackages from '../pages/Packages/TravelPackages';
 
 import ProtectedRoute from '../components/common/ProtectedRoute';
 
@@ -39,6 +40,7 @@ function AppRoutes() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/trips" element={<TripManagement />} />
           <Route path="/vouchers" element={<VoucherGenerator />} />
+          <Route path="/packages" element={<TravelPackages />} />
           <Route path="/profile" element={<Dashboard />} />
         </Route>
 
