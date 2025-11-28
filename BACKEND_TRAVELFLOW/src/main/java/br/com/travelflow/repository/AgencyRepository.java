@@ -15,7 +15,7 @@ public interface AgencyRepository extends JpaRepository<Agency, Long> {
 
     Optional<Agency> findByEmail(String email);
 
-    @Query("SELECT A FROM Agency a WHERE a.active = true")
+    @Query("SELECT a FROM Agency a WHERE a.active = true")
     List<Agency> findAllActive();
 
     @Query("SELECT a FROM Agency a WHERE a.name LIKE %:name% AND a.active = true")

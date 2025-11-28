@@ -1,46 +1,58 @@
 package br.com.travelflow.security;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import br.com.travelflow.domain.entity.Agency;
+import br.com.travelflow.repository.AgencyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.util.Optional;
 
-public final class SecurityUtils {
+@Component
+public class SecurityUtils {
 
-    private SecurityUtils() {
-        throw new IllegalStateException("Utility class");
+    private static AgencyRepository agencyRepository;
+
+    @Autowired
+    public SecurityUtils(AgencyRepository agencyRepository) {
+        SecurityUtils.agencyRepository = agencyRepository;
     }
 
-    public static Optional<String> getCurrentUsername() {
+    public static Long getCurrentAgencyId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null ||
-                !authentication.isAuthenticated() ||
-                authentication instanceof AnonymousAuthenticationToken) {
-            return Optional.empty();
+        if (authentication != null && authentication.getDetails() instanceof AuthenticationDetails) {
+            AuthenticationDetails details = (AuthenticationDetails) authentication.getDetails();
+            return details.getAgencyId();
         }
+        throw new RuntimeException("No authenticated user or agency context found");
+    }
 
-        return Optional.ofNullable(authentication.getName());
+    public static Agency getCurrentUserAgency() {
+        Long agencyId = getCurrentAgencyId();
+        return agencyRepository.findById(agencyId)
+                .orElseThrow(() -> new RuntimeException("Agency not found for current user"));
+    }
+
+    public static String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            return authentication.getName();
+        }
+        return null;
+    }
+
+    public static String getCurrentUserRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getDetails() instanceof AuthenticationDetails) {
+            AuthenticationDetails details = (AuthenticationDetails) authentication.getDetails();
+            return details.getRole();
+        }
+        return null;
     }
 
     public static boolean isAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return false;
-        }
-
-        return authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(role -> role.equals("ROLE_ADMIN"));
-    }
-
-    public static Optional<String> getCurrentUserRole() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null)
-            return Optional.empty();
-        return authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst();
+        String role = getCurrentUserRole();
+        return "ADMIN".equals(role);
     }
 }
