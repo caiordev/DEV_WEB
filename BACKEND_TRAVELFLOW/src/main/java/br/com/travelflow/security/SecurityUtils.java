@@ -23,21 +23,22 @@ public final class SecurityUtils {
         return Optional.ofNullable(authentication.getName());
     }
 
-    public static boolean isAdmin(){
+    public static boolean isAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication == null || !authentication.isAuthenticated()){
+        if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
 
         return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .anyMatch(role -> role.equals("ADMIN") || role.equals("ROLE_ADMIN"));
+                .anyMatch(role -> role.equals("ROLE_ADMIN"));
     }
 
-    public static Optional<String> getCurrentUserRole(){
+    public static Optional<String> getCurrentUserRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null) return Optional.empty();
+        if (authentication == null)
+            return Optional.empty();
         return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst();

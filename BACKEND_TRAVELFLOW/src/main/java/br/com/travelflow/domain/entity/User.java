@@ -27,7 +27,7 @@ public class User {
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, length = 60)
     private String password;
 
     @NotBlank(message = "Full name is required")
@@ -36,7 +36,7 @@ public class User {
     private String fullName;
 
     @Column(nullable = false)
-    private Boolean active;
+    private Boolean active=true;
 
     private LocalDateTime lastLogin;
 
