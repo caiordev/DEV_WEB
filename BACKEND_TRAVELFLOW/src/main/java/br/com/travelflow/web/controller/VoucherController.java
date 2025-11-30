@@ -1,8 +1,8 @@
 package br.com.travelflow.web.controller;
 
-import br.com.caio.painel_service.domain.dto.CreateVoucherDto;
-import br.com.caio.painel_service.domain.dto.VoucherDto;
-import br.com.caio.painel_service.domain.service.VoucherService;
+import br.com.travelflow.domain.dto.CreateVoucherDto;
+import br.com.travelflow.domain.dto.VoucherDto;
+import br.com.travelflow.service.VoucherService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/vouchers")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
 public class VoucherController {
     
     private final VoucherService voucherService;
