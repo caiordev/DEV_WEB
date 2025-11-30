@@ -3,6 +3,7 @@ package br.com.travelflow.domain.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ public class VoucherTripDto {
 
     @NotNull(message = "Trip is required")
     private TripDto trip;
+
     private LocalDate tripDate;
 
     @NotNull(message = "Passenger count is required")
@@ -19,13 +21,16 @@ public class VoucherTripDto {
     private Integer passengerCount;
 
     @NotNull(message = "Total price is required")
-    private Double totalPrice;
+    private BigDecimal totalPrice;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     public VoucherTripDto() {}
 
-    public VoucherTripDto(Long id, TripDto trip, LocalDate tripDate, Integer passengerCount, Double totalPrice, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public VoucherTripDto(Long id, TripDto trip, LocalDate tripDate, Integer passengerCount,
+                          BigDecimal totalPrice, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.trip = trip;
         this.tripDate = tripDate;
@@ -67,11 +72,11 @@ public class VoucherTripDto {
         this.passengerCount = passengerCount;
     }
 
-    public Double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 

@@ -3,6 +3,7 @@ package br.com.travelflow.domain.mapper;
 import br.com.travelflow.domain.dto.VoucherDto;
 import br.com.travelflow.domain.dto.VoucherTripDto;
 import br.com.travelflow.domain.entity.Voucher;
+import br.com.travelflow.domain.entity.VoucherTrip;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
