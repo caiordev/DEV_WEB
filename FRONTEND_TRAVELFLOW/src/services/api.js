@@ -9,6 +9,12 @@ export class ApiError extends Error {
   }
 }
 
+let globalLogoutCallback = null;
+
+export const setGlobalLogoutCallback = (callback) => {
+  globalLogoutCallback = callback;
+};
+
 async function fetchApi(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
   
@@ -37,6 +43,11 @@ async function fetchApi(endpoint, options = {}) {
         errorMessage = errorData.message || errorData.error || errorMessage;
       } catch {
         errorMessage = response.statusText || errorMessage;
+      }
+
+      if ((response.status === 401 || response.status === 403) && globalLogoutCallback) {
+        console.warn('Token inválido ou expirado. Redirecionando para login...');
+        globalLogoutCallback();
       }
 
       throw new ApiError(errorMessage, response.status, errorData);

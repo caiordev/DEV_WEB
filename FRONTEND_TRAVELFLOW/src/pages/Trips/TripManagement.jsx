@@ -65,10 +65,11 @@ export default function TripManagement() {
     setLoading(true);
     try {
       const tripsData = await tripService.getAllTrips();
-      setTrips(tripsData);
+      setTrips(tripsData || []);
     } catch (error) {
       console.error('Error loading trips:', error);
       showSnackbar('Erro ao carregar destinos', 'error');
+      setTrips([]); // Garante que trips seja um array mesmo em caso de erro
     } finally {
       setLoading(false);
     }
@@ -455,17 +456,17 @@ export default function TripManagement() {
           Destinos Cadastrados
         </Typography>
         
-        {loading && trips.length === 0 ? (
+        {loading && (trips || []).length === 0 ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
             <CircularProgress />
           </Box>
-        ) : trips.length === 0 ? (
+        ) : (trips || []).length === 0 ? (
           <Typography color="text.secondary" align="center" sx={{ py: 4 }}>
             Nenhum destino cadastrado ainda.
           </Typography>
         ) : (
           <Grid container spacing={3}>
-            {trips.map((trip) => (
+            {(trips || []).map((trip) => (
               <Grid item xs={12} sm={6} md={4} key={trip.id}>
                 <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   {trip.imageUrl && (

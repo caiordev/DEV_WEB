@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authService, ApiError } from '../services/api';
+import { authService, ApiError, setGlobalLogoutCallback } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -15,7 +15,15 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const logout = () => {
+    setUser(null);
+    authService.logout();
+    window.location.href = '/login';
+  };
+
   useEffect(() => {
+    setGlobalLogoutCallback(logout);
+
     const savedUser = localStorage.getItem('user');
     const token = localStorage.getItem('token');
     
@@ -61,11 +69,6 @@ export const AuthProvider = ({ children }) => {
       
       return { success: false, error: errorMessage };
     }
-  };
-
-  const logout = () => {
-    setUser(null);
-    authService.logout();
   };
 
   const value = {
