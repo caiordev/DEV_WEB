@@ -69,7 +69,7 @@ export default function TripManagement() {
     } catch (error) {
       console.error('Error loading trips:', error);
       showSnackbar('Erro ao carregar destinos', 'error');
-      setTrips([]); // Garante que trips seja um array mesmo em caso de erro
+      setTrips([]); 
     } finally {
       setLoading(false);
     }
@@ -242,97 +242,106 @@ export default function TripManagement() {
         </Box>
         
         <Box component="form" onSubmit={handleSubmit} noValidate>
-          {/* Seção: Informações Básicas */}
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
-            Informações do Destino
-          </Typography>
-          <Grid container spacing={3} sx={{ mb: 3 }}>
-            <Grid item xs={12} md={6}>
-              <TextField
-                required
-                fullWidth
-                id="destination"
-                name="destination"
-                label="Nome do Destino"
-                placeholder="Ex: Praia do Forte, Fernando de Noronha"
-                value={formData.destination}
-                onChange={handleChange}
-                error={!!errors.destination}
-                helperText={errors.destination || 'Digite o nome principal do destino'}
-              />
-            </Grid>
-            
-            <Grid item xs={12} md={6}>
-              <TextField
-                required
-                fullWidth
-                id="location"
-                name="location"
-                label="Localização Completa"
-                placeholder="Cidade, Estado, País"
-                value={formData.location}
-                onChange={handleChange}
-                error={!!errors.location}
-                helperText={errors.location || 'Ex: Salvador, Bahia, Brasil'}
-              />
-            </Grid>
-          </Grid>
-            
-          {/* Seção: Precificação */}
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
-            Precificação
-          </Typography>
-          <Grid container spacing={3} sx={{ mb: 3 }}>
-            <Grid item xs={12} md={6}>
-              <TextField
-                required
-                fullWidth
-                id="pricePerPerson"
-                name="pricePerPerson"
-                label="Preço por Pessoa"
-                placeholder="0.00"
-                type="number"
-                value={formData.pricePerPerson}
-                onChange={handleChange}
-                error={!!errors.pricePerPerson}
-                helperText={errors.pricePerPerson || 'Valor individual do pacote'}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                }}
-              />
-            </Grid>
-          </Grid>
-            
-          {/* Seção: Descrição */}
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
-            Descrição
-          </Typography>
-          <Grid container spacing={3} sx={{ mb: 3 }}>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="description"
-                name="description"
-                label="Descrição Detalhada"
-                placeholder="Descreva os atrativos, atividades incluídas, diferenciais do destino..."
-                multiline
-                rows={4}
-                value={formData.description}
-                onChange={handleChange}
-                error={!!errors.description}
-                helperText={errors.description || 'Forneça uma descrição atrativa e completa do destino'}
-              />
-            </Grid>
-          </Grid>
-            
-          {/* Seção: Imagem */}
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
-            Imagem do Destino
-          </Typography>
           <Grid container spacing={3}>
+            {/* Coluna Esquerda: Informações do Destino + Precificação */}
+            <Grid item xs={12} lg={6}>
+              {/* Seção: Informações Básicas */}
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+                Informações do Destino
+              </Typography>
+              <Grid container spacing={2} sx={{ mb: 3 }}>
+                <Grid item xs={12} sm={8}>
+                  <TextField
+                    required
+                    fullWidth
+                    size="large"
+                    id="destination"
+                    name="destination"
+                    label="Nome do Destino"
+                    placeholder="Ex: Praia do Forte, Fernando de Noronha"
+                    value={formData.destination}
+                    onChange={handleChange}
+                    error={!!errors.destination}
+                    helperText={errors.destination || 'Digite o nome principal do destino'}
+                    sx={{ minWidth: '300px' }}
+                  />
+                </Grid>
+                
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    required
+                    fullWidth
+                    size="large"
+                    id="pricePerPerson"
+                    name="pricePerPerson"
+                    label="Preço por Pessoa"
+                    placeholder="0.00"
+                    type="number"
+                    value={formData.pricePerPerson}
+                    onChange={handleChange}
+                    error={!!errors.pricePerPerson}
+                    helperText={errors.pricePerPerson || 'Valor individual do pacote'}
+                    sx={{ minWidth: '200px' }}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+                    }}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    size="large"
+                    id="location"
+                    name="location"
+                    label="Localização Completa"
+                    placeholder="Cidade, Estado, País"
+                    value={formData.location}
+                    onChange={handleChange}
+                    error={!!errors.location}
+                    helperText={errors.location || 'Ex: Salvador, Bahia, Brasil'}
+                    sx={{ minWidth: '300px' }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            {/* Coluna Direita: Descrição */}
+            <Grid item xs={12} lg={6}>
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+                Descrição
+              </Typography>
+              <Grid container spacing={2} sx={{ mb: 3 }}>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="description"
+                    name="description"
+                    label="Descrição Detalhada"
+                    placeholder="Descreva os atrativos, atividades incluídas, diferenciais do destino..."
+                    multiline
+                    rows={8}
+                    value={formData.description}
+                    onChange={handleChange}
+                    error={!!errors.description}
+                    helperText={errors.description || 'Forneça uma descrição atrativa e completa do destino'}
+                    sx={{ minWidth: '350px' }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
             
-            <Grid item xs={12}>
+            
+          {/* Seção: Imagem e Botões */}
+          <Grid container spacing={3} sx={{ mt: 1 }}>
+            <Grid item xs={12} md={8}>
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+                Imagem do Destino
+              </Typography>
+              
               <input
                 type="file"
                 accept="image/*"
@@ -340,79 +349,96 @@ export default function TripManagement() {
                 ref={fileInputRef}
                 onChange={handleImageChange}
               />
+              
               <Box 
                 sx={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  alignItems: 'center', 
-                  gap: 2,
-                  p: 3,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 3,
+                  p: 2,
                   border: '2px dashed',
                   borderColor: imagePreview ? 'primary.main' : 'grey.300',
                   borderRadius: 2,
                   transition: 'all 0.3s',
+                  backgroundColor: 'grey.50',
                   '&:hover': {
-                    borderColor: 'primary.main'
+                    borderColor: 'primary.main',
+                    backgroundColor: 'primary.50'
                   }
                 }}
               >
                 {!imagePreview ? (
                   <>
-                    <CloudUploadIcon sx={{ fontSize: 48, color: 'text.secondary' }} />
-                    <Typography variant="body1" color="text.secondary" align="center">
-                      Adicione uma imagem atrativa do destino
-                    </Typography>
+                    <CloudUploadIcon sx={{ fontSize: 36, color: 'text.secondary' }} />
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="body1" color="text.secondary" sx={{ mb: 0.5 }}>
+                        Adicione uma imagem atrativa do destino
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Formatos aceitos: JPG, PNG, GIF (Máx: 5MB)
+                      </Typography>
+                    </Box>
                     <Button
-                      variant="contained"
+                      variant="outlined"
                       component="span"
                       onClick={handleImageUploadClick}
                       startIcon={<CloudUploadIcon />}
-                      size="large"
+                      size="medium"
                     >
-                      Selecionar Imagem
+                      Selecionar
                     </Button>
-                    <Typography variant="caption" color="text.secondary">
-                      Formatos aceitos: JPG, PNG, GIF (Máx: 5MB)
-                    </Typography>
                   </>
                 ) : (
-                  <Box sx={{ width: '100%', textAlign: 'center' }}>
-                    <Box sx={{ position: 'relative', display: 'inline-block', maxWidth: '100%' }}>
+                  <>
+                    <Box sx={{ position: 'relative' }}>
                       <img 
                         src={imagePreview} 
                         alt="Preview" 
                         style={{ 
-                          maxWidth: '100%', 
-                          maxHeight: '300px',
-                          borderRadius: '12px',
-                          boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+                          width: '80px', 
+                          height: '60px',
+                          borderRadius: '8px',
+                          objectFit: 'cover',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                         }} 
                       />
                     </Box>
-                    <Typography variant="body2" sx={{ mt: 2, mb: 1, fontWeight: 500 }}>
-                      {selectedImage?.name || 'Imagem atual'}
-                    </Typography>
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, mb: 0.5 }}>
+                        {selectedImage?.name || 'Imagem selecionada'}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Imagem carregada com sucesso
+                      </Typography>
+                    </Box>
                     <Button
                       variant="outlined"
+                      size="small"
                       onClick={handleImageUploadClick}
                       startIcon={<EditIcon />}
-                      size="small"
                     >
-                      Alterar Imagem
+                      Alterar
                     </Button>
-                  </Box>
-                )}
-                {errors.image && (
-                  <Alert severity="error" sx={{ width: '100%' }}>
-                    {errors.image}
-                  </Alert>
+                  </>
                 )}
               </Box>
+              
+              {errors.image && (
+                <Alert severity="error" sx={{ mt: 1 }}>
+                  {errors.image}
+                </Alert>
+              )}
             </Grid>
-            
-            <Grid item xs={12}>
-              <Divider sx={{ my: 3 }} />
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+
+            <Grid item xs={12} md={4}>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: 2, 
+                height: '100%',
+                justifyContent: 'flex-end',
+                pt: { xs: 2, md: 6.5 } // Alinha com o título da imagem
+              }}>
                 {editMode && (
                   <Button
                     variant="outlined"
@@ -420,7 +446,8 @@ export default function TripManagement() {
                     size="large"
                     onClick={resetForm}
                     startIcon={<CloseIcon />}
-                    sx={{ px: 4 }}
+                    fullWidth
+                    sx={{ py: 1.5 }}
                   >
                     Cancelar
                   </Button>
@@ -432,8 +459,8 @@ export default function TripManagement() {
                   size="large"
                   startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
                   disabled={loading}
+                  fullWidth
                   sx={{ 
-                    px: 5,
                     py: 1.5,
                     fontWeight: 600,
                     boxShadow: 3,

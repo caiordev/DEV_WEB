@@ -222,9 +222,10 @@ export default function VoucherGenerator() {
   const loadTrips = async () => {
     try {
       const tripsData = await tripService.getAllTrips();
-      setAllTrips(tripsData);
+      setAllTrips(tripsData || []);
     } catch (error) {
       console.error('Error loading trips:', error);
+      setAllTrips([]); 
       setSnackbarMessage('Erro ao carregar destinos');
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
@@ -261,7 +262,7 @@ export default function VoucherGenerator() {
   
   const getSelectedTripObjects = () => {
     return selectedTrips.map(tripId => {
-      const trip = allTrips.find(t => t.id === tripId);
+      const trip = (allTrips || []).find(t => t.id === tripId);
       if (trip) {
         const passengerCount = passengerCounts[tripId] || 1;
         return {
@@ -485,7 +486,7 @@ export default function VoucherGenerator() {
                   renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {selected.map((value) => {
-                        const trip = allTrips.find(t => t.id === value);
+                        const trip = (allTrips || []).find(t => t.id === value);
                         return trip ? (
                           <Chip 
                             key={value} 
@@ -503,7 +504,7 @@ export default function VoucherGenerator() {
                   {allTrips.length === 0 ? (
                     <MenuItem disabled>Nenhum destino cadastrado</MenuItem>
                   ) : (
-                    allTrips.map((trip) => (
+                    (allTrips || []).map((trip) => (
                       <MenuItem key={trip.id} value={trip.id}>
                         <Checkbox checked={selectedTrips.indexOf(trip.id) > -1} />
                         <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}>
@@ -543,7 +544,7 @@ export default function VoucherGenerator() {
                     </TableHead>
                     <TableBody>
                       {selectedTrips.map((tripId) => {
-                        const trip = allTrips.find(t => t.id === tripId);
+                        const trip = (allTrips || []).find(t => t.id === tripId);
                         const passengerCount = passengerCounts[tripId] || 1;
                         const totalPrice = (trip?.pricePerPerson || 0) * passengerCount;
                         
