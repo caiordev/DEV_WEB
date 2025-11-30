@@ -120,6 +120,18 @@ export const authService = {
   getToken() {
     return localStorage.getItem('token');
   },
+
+  /**
+   * Obtém os dados completos do usuário logado
+   * @returns {Promise<Object>} Dados completos do usuário
+   */
+  async getProfile() {
+    const data = await fetchApi('/auth/me', {
+      method: 'GET',
+    });
+
+    return data;
+  },
 };
 
 const api = {
