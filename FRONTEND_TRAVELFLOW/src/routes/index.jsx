@@ -10,6 +10,7 @@ import Dashboard from '../pages/Dashboard/Dashboard';
 import TripManagement from '../pages/Trips/TripManagement';
 import VoucherGenerator from '../pages/Vouchers/VoucherGenerator';
 import TravelPackages from '../pages/Packages/TravelPackages';
+import PackageCalendarPage from '../pages/Packages/PackageCalendarPage';
 import CustomerVoucherHistory from '../pages/Customers/CustomerVoucherHistory';
 import Profile from '../pages/Profile/Profile';
 
@@ -43,6 +44,7 @@ function AppRoutes() {
           <Route path="/trips" element={<TripManagement />} />
           <Route path="/vouchers" element={<VoucherGenerator />} />
           <Route path="/packages" element={<TravelPackages />} />
+          <Route path="/package-calendar" element={<PackageCalendarPage />} />
           <Route path="/customers" element={<CustomerVoucherHistory />} />
           <Route path="/profile" element={<Profile />} />
         </Route>

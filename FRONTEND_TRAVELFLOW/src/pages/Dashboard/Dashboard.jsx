@@ -52,6 +52,11 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
+import voucherService from '../../services/voucherService.js';
+import dashboardService from '../../services/dashboardService.js';
+import exportService from '../../services/exportService.js';
+import notificationService from '../../services/notificationService.js';
+
 
 export default function Dashboard() {
   const [soldTrips, setSoldTrips] = useState([]);
@@ -80,8 +85,6 @@ export default function Dashboard() {
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
-
-  // Carregar viagens vendidas da API
   useEffect(() => {
     loadVouchers();
     loadDashboardStats();
@@ -96,7 +99,6 @@ export default function Dashboard() {
       setSoldTrips(vouchersData);
       setFilteredTrips(vouchersData);
 
-      // Extrair destinos únicos para o filtro
       const uniqueDestinations = new Set();
       vouchersData.forEach(voucher => {
         voucher.voucherTrips.forEach(voucherTrip => {
@@ -106,7 +108,6 @@ export default function Dashboard() {
       setDestinations(Array.from(uniqueDestinations));
     } catch (error) {
       console.error('Error loading vouchers:', error);
-      // Don't show error as dashboard might be empty initially
     } finally {
       setLoading(false);
     }
@@ -123,7 +124,6 @@ export default function Dashboard() {
       });
     } catch (error) {
       console.error('Error loading dashboard stats:', error);
-      // Keep default stats
     }
   };
 
@@ -134,7 +134,6 @@ export default function Dashboard() {
       setTopDestinations(topDest);
     } catch (error) {
       console.error('Error loading top destinations:', error);
-      // Calculate from local data if API fails
       calculateTopDestinationsFromLocal();
     }
   };
@@ -159,7 +158,6 @@ export default function Dashboard() {
   };
 
 
-  // Recalculate top destinations when soldTrips changes
   useEffect(() => {
     if (soldTrips.length > 0 && topDestinations.length === 0) {
       calculateTopDestinationsFromLocal();
@@ -209,7 +207,6 @@ export default function Dashboard() {
   };
 
 
-  // Calcular estatísticas localmente (para filtros)
   const calculateStats = (vouchers) => {
     const uniqueCustomers = new Set();
     const uniqueDestinations = new Set();
@@ -232,11 +229,9 @@ export default function Dashboard() {
   };
 
 
-  // Aplicar filtros
   useEffect(() => {
     let result = [...soldTrips];
 
-    // Filtrar por termo de busca (nome do cliente ou número do voucher)
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       result = result.filter(voucher =>
@@ -246,21 +241,18 @@ export default function Dashboard() {
       );
     }
 
-    // Filtrar por data inicial
     if (filters.startDate) {
       result = result.filter(voucher =>
         new Date(voucher.saleDate) >= new Date(filters.startDate)
       );
     }
 
-    // Filtrar por data final
     if (filters.endDate) {
       result = result.filter(voucher =>
         new Date(voucher.saleDate) <= new Date(filters.endDate)
       );
     }
 
-    // Filtrar por destino
     if (filters.destination) {
       result = result.filter(voucher =>
         voucher.voucherTrips.some(voucherTrip => voucherTrip.trip.destination === filters.destination)
@@ -272,7 +264,6 @@ export default function Dashboard() {
   }, [filters, soldTrips]);
 
 
-  // Manipular mudanças nos filtros
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({
@@ -282,7 +273,6 @@ export default function Dashboard() {
   };
 
 
-  // Limpar filtros
   const handleClearFilters = () => {
     setFilters({
       search: '',
@@ -294,7 +284,6 @@ export default function Dashboard() {
   };
 
 
-  // Paginação
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -306,7 +295,6 @@ export default function Dashboard() {
   };
 
 
-  // Exportação
   const handleExportExcel = () => {
     exportService.exportDashboardToExcel(filteredTrips, stats);
   };
@@ -317,7 +305,6 @@ export default function Dashboard() {
   };
 
 
-  // Formatar data
   const formatDate = (dateString) => {
     try {
       return dayjs(dateString).format('DD/MM/YYYY');

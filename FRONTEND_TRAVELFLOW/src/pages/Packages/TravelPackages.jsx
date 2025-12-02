@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Paper,
@@ -8,6 +8,7 @@ import {
   Card,
   CardContent,
   CardActions,
+  CardMedia,
   TextField,
   Dialog,
   DialogTitle,
@@ -32,6 +33,8 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Save as SaveIcon,
+  CloudUpload as CloudUploadIcon,
+  Close as CloseIcon,
   LocalOffer as OfferIcon,
   CardGiftcard as PackageIcon,
   Description as DescriptionIcon,
@@ -52,13 +55,18 @@ export default function TravelPackages() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [packageToDelete, setPackageToDelete] = useState(null);
   
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const fileInputRef = useRef(null);
+  
   const [formData, setFormData] = useState({
     id: null,
     name: '',
     description: '',
     tripIds: [],
     discountPercentage: 0,
-    active: true
+    active: true,
+    imageUrls: []
   });
 
 
@@ -84,9 +92,10 @@ export default function TravelPackages() {
   const loadTrips = async () => {
     try {
       const data = await tripService.getAllTrips();
-      setTrips(data);
+      setTrips(data || []);
     } catch (error) {
       console.error('Erro ao carregar destinos:', error);
+      setTrips([]);
     }
   };
 
@@ -99,8 +108,10 @@ export default function TravelPackages() {
         description: pkg.description,
         tripIds: pkg.trips.map(t => t.id),
         discountPercentage: pkg.discountPercentage,
-        active: pkg.active
+        active: pkg.active,
+        imageUrls: pkg.imageUrls || (pkg.imageUrl ? [pkg.imageUrl] : [])
       });
+      setImagePreviews(pkg.imageUrls || (pkg.imageUrl ? [pkg.imageUrl] : []));
       setEditMode(true);
     } else {
       setFormData({
@@ -109,8 +120,11 @@ export default function TravelPackages() {
         description: '',
         tripIds: [],
         discountPercentage: 0,
-        active: true
+        active: true,
+        imageUrls: []
       });
+      setImagePreviews([]);
+      setSelectedImages([]);
       setEditMode(false);
     }
     setOpenDialog(true);
@@ -125,8 +139,12 @@ export default function TravelPackages() {
       description: '',
       tripIds: [],
       discountPercentage: 0,
-      active: true
+      active: true,
+      imageUrls: []
     });
+    setImagePreviews([]);
+    setSelectedImages([]);
+    setErrors({});
   };
 
 
@@ -147,36 +165,70 @@ export default function TravelPackages() {
   };
 
 
-  const handleSubmit = async () => {
-    if (!formData.name || formData.tripIds.length === 0) {
-      alert('Preencha todos os campos obrigatórios');
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      const validFiles = files.filter(file => {
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`Imagem ${file.name} muito grande. Tamanho máximo: 5MB`);
+          return false;
+        }
+        return true;
+      });
+      
+      setSelectedImages(prev => [...prev, ...validFiles]);
+      
+      const previews = validFiles.map(file => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        });
+      });
+      
+      Promise.all(previews).then(results => {
+        setImagePreviews(prev => [...prev, ...results]);
+      });
+    }
+  };
+
+  const handleImageUploadClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleRemoveImage = (index) => {
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+    setSelectedImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
-
-
+    
+    const packageData = {
+      ...formData,
+      imageUrls: imagePreviews
+    };
+    
     setLoading(true);
     try {
-      const packageData = {
-        name: formData.name,
-        description: formData.description,
-        tripIds: formData.tripIds,
-        discountPercentage: parseFloat(formData.discountPercentage),
-        active: formData.active
-      };
-
-
       if (editMode) {
-        await packageService.updatePackage(formData.id, packageData);
+        await packageService.updatePackage(packageData.id, packageData);
+        showSnackbar('Pacote atualizado com sucesso');
       } else {
         await packageService.createPackage(packageData);
+        showSnackbar('Pacote criado com sucesso');
       }
-
-
-      handleCloseDialog();
       loadPackages();
+      handleCloseDialog();
     } catch (error) {
       console.error('Erro ao salvar pacote:', error);
-      alert('Erro ao salvar pacote: ' + error.message);
+      showSnackbar('Erro ao salvar pacote', 'error');
     } finally {
       setLoading(false);
     }
@@ -244,11 +296,52 @@ export default function TravelPackages() {
           {packages.map((pkg) => {
             const prices = calculatePackagePrice(pkg);
             return (
-              <Grid item xs={12} md={6} lg={4} key={pkg.id}>
+              <Grid item xs={12} sm={6} md={4} key={pkg.id}>
                 <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2 }}>
-                      <Typography variant="h6" component="h3">
+                  {pkg.imageUrls?.length > 0 ? (
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={pkg.imageUrls[0]}
+                      alt={pkg.name}
+                      sx={{ objectFit: 'cover', borderRadius: 1 }}
+                    />
+                  ) : pkg.imageUrl ? (
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={pkg.imageUrl}
+                      alt={pkg.name}
+                      sx={{ objectFit: 'cover', borderRadius: 1 }}
+                    />
+                  ) : (
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={'placeholder-image-url'}
+                      alt={pkg.name}
+                      sx={{ objectFit: 'cover', borderRadius: 1 }}
+                    />
+                  )}
+                  {pkg.imageUrls?.length > 1 && (
+                    <Box sx={{ display: 'flex', overflowX: 'auto', mt: 1, pb: 1 }}>
+                      {pkg.imageUrls.slice(1).map((url, index) => (
+                        <Box key={index} sx={{ flex: '0 0 auto', mr: 1 }}>
+                          <CardMedia
+                            component="img"
+                            height="60"
+                            width="100"
+                            image={url}
+                            alt={`${pkg.name} ${index + 2}`}
+                            sx={{ objectFit: 'cover', borderRadius: 1 }}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                  <CardContent sx={{ flexGrow: 1, pb: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2, mt: 1 }}>
+                      <Typography variant="h6" component="h3" sx={{ fontWeight: 600 }}>
                         {pkg.name}
                       </Typography>
                       {pkg.discountPercentage > 0 && (
@@ -262,12 +355,12 @@ export default function TravelPackages() {
                     </Box>
 
 
-                    <Typography variant="body2" color="textSecondary" paragraph>
+                    <Typography variant="body2" color="textSecondary" paragraph sx={{ mb: 2, lineHeight: 1.4 }}>
                       {pkg.description}
                     </Typography>
 
 
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600, color: 'primary.main' }}>
                       Destinos incluídos:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
@@ -277,36 +370,38 @@ export default function TravelPackages() {
                           label={trip.destination}
                           size="small"
                           variant="outlined"
+                          sx={{ fontSize: '0.75rem' }}
                         />
                       ))}
                     </Box>
 
 
-                    <Box sx={{ mt: 2 }}>
+                    <Box sx={{ mt: 'auto', pt: 2 }}>
                       {pkg.discountPercentage > 0 && (
                         <Typography
                           variant="body2"
-                          sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
+                          sx={{ textDecoration: 'line-through', color: 'text.secondary', mb: 0.5 }}
                         >
                           De: R$ {prices.original.toFixed(2)}
                         </Typography>
                       )}
-                      <Typography variant="h5" color="primary" fontWeight="bold">
+                      <Typography variant="h5" color="primary" fontWeight="bold" sx={{ mb: 1 }}>
                         R$ {prices.discounted.toFixed(2)}
                       </Typography>
                       {pkg.discountPercentage > 0 && (
-                        <Typography variant="caption" color="success.main">
+                        <Typography variant="caption" color="success.main" sx={{ fontWeight: 600 }}>
                           Economize R$ {prices.savings.toFixed(2)}
                         </Typography>
                       )}
                     </Box>
 
 
-                    <Box sx={{ mt: 2 }}>
+                    <Box sx={{ mt: 2, pt: 1 }}>
                       <Chip
                         label={pkg.active ? 'Ativo' : 'Inativo'}
                         color={pkg.active ? 'success' : 'default'}
                         size="small"
+                        sx={{ fontWeight: 600 }}
                       />
                     </Box>
                   </CardContent>
@@ -365,12 +460,12 @@ export default function TravelPackages() {
         <DialogContent sx={{ pt: 3 }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+              {/* <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
                 Informações do Pacote
-              </Typography>
+              </Typography> */}
             </Grid>
             
-            <Grid item xs={12}>
+            <Grid item xs={12} md={8}>
               <TextField
                 fullWidth
                 label="Nome do Pacote"
@@ -383,7 +478,31 @@ export default function TravelPackages() {
               />
             </Grid>
 
-
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel>Status do Pacote</InputLabel>
+                <Select
+                  name="active"
+                  value={formData.active}
+                  onChange={handleChange}
+                  label="Status do Pacote"
+                >
+                  <MenuItem value={true}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Chip label="Ativo" color="success" size="small" />
+                      <Typography variant="body2">Disponível</Typography>
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value={false}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Chip label="Inativo" color="default" size="small" />
+                      <Typography variant="body2">Não disponível</Typography>
+                    </Box>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -398,11 +517,10 @@ export default function TravelPackages() {
               />
             </Grid>
 
-
             <Grid item xs={12}>
-              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+              {/* <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
                 Destinos Incluídos
-              </Typography>
+              </Typography> */}
             </Grid>
             
             <Grid item xs={12}>
@@ -456,14 +574,67 @@ export default function TravelPackages() {
               )}
             </Grid>
 
-
-            <Grid item xs={12}>
-              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
-                Desconto e Status
+            <Grid item xs={12} sx={{ mb: 2 }}>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
+                Imagens do Pacote
               </Typography>
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                multiple
+              />
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<CloudUploadIcon />}
+                onClick={handleImageUploadClick}
+                sx={{ mb: 1 }}
+              >
+                Selecionar Imagens
+              </Button>
+              {imagePreviews.length > 0 && (
+                <Grid container spacing={2} sx={{ mt: 1 }}>
+                  {imagePreviews.map((preview, index) => (
+                    <Grid item key={index} xs={4}>
+                      <Box sx={{ position: 'relative' }}>
+                        <img 
+                          src={preview} 
+                          alt={`Preview ${index}`} 
+                          style={{ 
+                            width: '100%', 
+                            height: '100px', 
+                            objectFit: 'cover', 
+                            borderRadius: '4px' 
+                          }} 
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleRemoveImage(index)}
+                          sx={{ 
+                            position: 'absolute', 
+                            top: 0, 
+                            right: 0,
+                            padding: '2px',
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                          }}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
             </Grid>
-            
-            <Grid item xs={12} sm={6}>
+
+            <Grid item xs={12} md={6}>
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+                Desconto Promocional
+              </Typography>
               <TextField
                 fullWidth
                 label="Desconto Promocional"
@@ -479,33 +650,6 @@ export default function TravelPackages() {
                 }}
               />
             </Grid>
-
-
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Status do Pacote</InputLabel>
-                <Select
-                  name="active"
-                  value={formData.active}
-                  onChange={handleChange}
-                  label="Status do Pacote"
-                >
-                  <MenuItem value={true}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Chip label="Ativo" color="success" size="small" />
-                      <Typography variant="body2">Disponível para venda</Typography>
-                    </Box>
-                  </MenuItem>
-                  <MenuItem value={false}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Chip label="Inativo" color="default" size="small" />
-                      <Typography variant="body2">Não disponível</Typography>
-                    </Box>
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
 
             {formData.tripIds.length > 0 && (
               <Grid item xs={12}>

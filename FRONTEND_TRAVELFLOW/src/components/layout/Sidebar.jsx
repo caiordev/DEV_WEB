@@ -41,6 +41,7 @@ function Sidebar() {
     { text: 'Destinos', icon: <FlightIcon />, path: '/trips' },
     { text: 'Vouchers', icon: <VoucherIcon />, path: '/vouchers' },
     { text: 'Pacotes', icon: <PackageIcon />, path: '/packages' },
+    { text: 'Calendário de Pacotes', icon: <PackageIcon />, path: '/package-calendar' },
     { text: 'Clientes', icon: <PeopleIcon />, path: '/customers' },
   ];
 
@@ -158,7 +159,7 @@ function Sidebar() {
       >
         {open && (
           <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
-            © 2024 TravelFlow
+            2024 TravelFlow
           </Box>
         )}
       </Box>
