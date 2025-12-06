@@ -1,6 +1,6 @@
 package br.com.travelflow.domain.dto;
 
-import br.com.caio.painel_service.domain.entity.TravelPackage;
+import br.com.travelflow.domain.entity.TravelPackage;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

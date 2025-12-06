@@ -1,12 +1,12 @@
 package br.com.travelflow.service;
 
-import br.com.caio.painel_service.domain.dto.CreatePackageDto;
-import br.com.caio.painel_service.domain.dto.TravelPackageDto;
-import br.com.caio.painel_service.domain.entity.Agency;
-import br.com.caio.painel_service.domain.entity.TravelPackage;
-import br.com.caio.painel_service.domain.entity.Trip;
-import br.com.caio.painel_service.domain.repository.TravelPackageRepository;
-import br.com.caio.painel_service.domain.repository.TripRepository;
+import br.com.travelflow.domain.dto.CreatePackageDto;
+import br.com.travelflow.domain.dto.TravelPackageDto;
+import br.com.travelflow.domain.entity.Agency;
+import br.com.travelflow.domain.entity.TravelPackage;
+import br.com.travelflow.domain.entity.Trip;
+import br.com.travelflow.repository.TravelPackageRepository;
+import br.com.travelflow.repository.TripRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,11 +53,9 @@ public class TravelPackageService {
         travelPackage.setDiscountPercentage(dto.getDiscountPercentage());
         travelPackage.setActive(dto.getActive());
         travelPackage.setAgency(agency);
-        
-        // Salvar primeiro para gerar o ID
+
         TravelPackage saved = packageRepository.save(travelPackage);
-        
-        // Depois adicionar os trips
+
         List<Trip> trips = tripRepository.findAllById(dto.getTripIds());
         if (trips.size() != dto.getTripIds().size()) {
             throw new RuntimeException("Some trips not found");
@@ -65,8 +63,7 @@ public class TravelPackageService {
         
         saved.setTrips(trips);
         saved = packageRepository.save(saved);
-        
-        // Forçar o carregamento dos trips
+
         saved.getTrips().size();
         
         return new TravelPackageDto(saved);

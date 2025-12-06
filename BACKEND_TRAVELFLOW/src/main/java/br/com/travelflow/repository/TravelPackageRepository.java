@@ -1,7 +1,7 @@
 package br.com.travelflow.repository;
 
-import br.com.caio.painel_service.domain.entity.Agency;
-import br.com.caio.painel_service.domain.entity.TravelPackage;
+import br.com.travelflow.domain.entity.Agency;
+import br.com.travelflow.domain.entity.TravelPackage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -27,8 +27,7 @@ public class CreatePackageDto {
     private Boolean active;
     
     public CreatePackageDto() {}
-    
-    // Getters and Setters
+
     public String getName() {
         return name;
     }

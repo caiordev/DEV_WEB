@@ -95,8 +95,7 @@ public class TravelPackage {
         BigDecimal discount = total.multiply(discountPercentage).divide(BigDecimal.valueOf(100));
         return total.subtract(discount);
     }
-    
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }

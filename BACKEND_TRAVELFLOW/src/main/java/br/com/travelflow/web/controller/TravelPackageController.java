@@ -1,10 +1,10 @@
 package br.com.travelflow.web.controller;
 
-import br.com.caio.painel_service.domain.dto.CreatePackageDto;
-import br.com.caio.painel_service.domain.dto.TravelPackageDto;
-import br.com.caio.painel_service.domain.entity.Agency;
-import br.com.caio.painel_service.domain.service.TravelPackageService;
-import br.com.caio.painel_service.security.SecurityUtils;
+import br.com.travelflow.domain.dto.CreatePackageDto;
+import br.com.travelflow.domain.dto.TravelPackageDto;
+import br.com.travelflow.domain.entity.Agency;
+import br.com.travelflow.security.SecurityUtils;
+import br.com.travelflow.service.TravelPackageService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
