@@ -132,6 +132,62 @@ export const authService = {
 
     return data;
   },
+
+  /**
+   * Obtém o usuário atual do localStorage
+   * @returns {Object|null} Dados do usuário ou null
+   */
+  getUser() {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  },
+
+  /**
+   * Cria um novo usuário (apenas para admin)
+   * @param {Object} userData - Dados do novo usuário
+   * @returns {Promise<Object>} Usuário criado
+   */
+  async createUser(userData) {
+    const data = await fetchApi('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+
+    return data;
+  },
+
+  /**
+   * Obtém todos os usuários da agência (apenas para admin)
+   * @returns {Promise<Array>} Lista de usuários
+   */
+  async getAgencyUsers() {
+    const data = await fetchApi('/users', {
+      method: 'GET',
+    });
+
+    return data;
+  },
+
+  /**
+   * Verifica se o usuário atual é super admin
+   * @returns {boolean} True se for super admin
+   */
+  isSuperAdmin() {
+    const user = this.getUser();
+    return user?.role === 'SUPERADMIN';
+  },
+
+  /**
+   * Obtém todas as agências (apenas para super admin)
+   * @returns {Promise<Array>} Lista de agências
+   */
+  async getAllAgencies() {
+    const data = await fetchApi('/agencies', {
+      method: 'GET',
+    });
+
+    return data;
+  },
 };
 
 const api = {

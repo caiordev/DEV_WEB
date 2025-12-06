@@ -12,6 +12,9 @@ import VoucherGenerator from '../pages/Vouchers/VoucherGenerator';
 import TravelPackages from '../pages/Packages/TravelPackages';
 import PackageCalendarPage from '../pages/Packages/PackageCalendarPage';
 import CustomerVoucherHistory from '../pages/Customers/CustomerVoucherHistory';
+import NotificationsPage from '../pages/Notifications/NotificationsPage';
+import UserManagement from '../pages/Admin/UserManagement';
+import AdminPanel from '../pages/SuperAdmin/AdminPanel';
 import Profile from '../pages/Profile/Profile';
 
 import ProtectedRoute from '../components/common/ProtectedRoute';
@@ -46,6 +49,9 @@ function AppRoutes() {
           <Route path="/packages" element={<TravelPackages />} />
           <Route path="/package-calendar" element={<PackageCalendarPage />} />
           <Route path="/customers" element={<CustomerVoucherHistory />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/users" element={<UserManagement />} />
+          <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
 

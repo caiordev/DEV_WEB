@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import notificationService from '../../services/notificationService';
 import {
   Drawer,
   List,
@@ -12,7 +14,8 @@ import {
   Divider,
   Tooltip,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Badge
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -23,7 +26,10 @@ import {
   Settings as SettingsIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
+  Notifications as NotificationsIcon,
+  ManageAccounts as ManageAccountsIcon,
+  SupervisorAccount as SuperAdminIcon
 } from '@mui/icons-material';
 
 const drawerWidth = 240;
@@ -31,10 +37,30 @@ const drawerWidthCollapsed = 65;
 
 function Sidebar() {
   const [open, setOpen] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+  const isSuperAdmin = user?.role === 'ADMIN'; //'SUPERADMIN';
+
+  useEffect(() => {
+    loadUnreadCount();
+    const interval = setInterval(loadUnreadCount, 120000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadUnreadCount = async () => {
+    try {
+      const data = await notificationService.getAllNotifications();
+      const unread = data.filter(n => !n.read).length;
+      setUnreadCount(unread);
+    } catch (error) {
+      console.error('Erro ao carregar contador de notificações:', error);
+    }
+  };
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
@@ -43,7 +69,24 @@ function Sidebar() {
     { text: 'Pacotes', icon: <PackageIcon />, path: '/packages' },
     { text: 'Calendário de Pacotes', icon: <PackageIcon />, path: '/package-calendar' },
     { text: 'Clientes', icon: <PeopleIcon />, path: '/customers' },
+    { text: 'Notificações', icon: <NotificationsIcon />, path: '/notifications' },
   ];
+
+  if (isAdmin) {
+    menuItems.push({
+      text: 'Usuários',
+      icon: <ManageAccountsIcon />,
+      path: '/users'
+    });
+  }
+
+  if (isSuperAdmin) {
+    menuItems.push({
+      text: 'Painel Admin',
+      icon: <SuperAdminIcon />,
+      path: '/admin-panel'
+    });
+  }
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -128,7 +171,13 @@ function Sidebar() {
                       color: isActive ? 'inherit' : 'text.secondary',
                     }}
                   >
-                    {item.icon}
+                    {item.path === '/notifications' && unreadCount > 0 ? (
+                      <Badge badgeContent={unreadCount} color="error">
+                        {item.icon}
+                      </Badge>
+                    ) : (
+                      item.icon
+                    )}
                   </ListItemIcon>
                   <ListItemText
                     primary={item.text}
