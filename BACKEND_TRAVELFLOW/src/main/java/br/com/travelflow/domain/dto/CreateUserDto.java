@@ -2,16 +2,31 @@ package br.com.travelflow.domain.dto;
 
 import br.com.travelflow.domain.entity.UserRole;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class CreateUserDto {
 
+    @NotBlank
+    @Size(max = 50)
     private String username;
 
+    @NotBlank
+    @Email
+    @Size(max = 100)
     private String email;
 
+    @NotBlank
+    @Size(min = 6, max = 100)
     private String password;
 
+    @NotBlank
+    @Size(max = 100)
     private String fullName;
 
+    @NotNull
     private UserRole role;
 
     public CreateUserDto() {}

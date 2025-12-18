@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Profile("dev")
+@Profile({"dev", "prod"})
 public class LocalDataLoader {
     @Bean
     public CommandLineRunner loadData(UserRepository userRepository, AgencyRepository agencyRepository, PasswordEncoder passwordEncoder) {

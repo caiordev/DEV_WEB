@@ -26,6 +26,8 @@ public class CreatePackageDto {
     @NotNull(message = "Active status is required")
     private Boolean active;
     
+    private List<String> imageUrls;
+    
     public CreatePackageDto() {}
 
     public String getName() {
@@ -66,5 +68,13 @@ public class CreatePackageDto {
     
     public void setActive(Boolean active) {
         this.active = active;
+    }
+    
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+    
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

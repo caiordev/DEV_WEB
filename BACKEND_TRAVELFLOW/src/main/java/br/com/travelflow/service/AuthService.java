@@ -16,6 +16,9 @@ import br.com.travelflow.exception.UserAlreadyExistsException;
 import br.com.travelflow.repository.UserRepository;
 import br.com.travelflow.security.SecurityUtils;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AuthService {
 
@@ -138,6 +141,37 @@ public class AuthService {
         String username = SecurityUtils.getCurrentUsername();
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Current user not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDto> getAgencyUsers() {
+        Long agencyId = SecurityUtils.getCurrentAgencyId();
+        List<User> users = userRepository.findByAgencyIdAndActive(agencyId);
+
+        return users.stream()
+                .map(user -> new UserDto(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getFullName(),
+                        user.getRole(),
+                        user.getActive(),
+                        user.getAgency().getId(),
+                        user.getAgency().getName()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Agency> getAllAgencies() {
+        // Este método só deve ser acessado pelo super admin
+        return agencyRepository.findAll();
+    }
+
+    public boolean isSuperAdmin() {
+        String username = SecurityUtils.getCurrentUsername();
+        User user = userRepository.findByUsername(username).orElse(null);
+        return user != null && "admin@agencia.com".equals(user.getEmail());
     }
 
 }

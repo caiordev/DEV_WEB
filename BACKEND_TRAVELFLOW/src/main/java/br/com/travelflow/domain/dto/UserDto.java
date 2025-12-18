@@ -5,22 +5,25 @@ import br.com.travelflow.domain.entity.UserRole;
 public class UserDto {
     private Long id;
     private String username;
-    private String password;
     private String email;
     private String fullName;
     private UserRole role;
     private boolean active;
+    private Long agencyId;
+    private String agencyName;
 
     public UserDto() {}
 
-    public UserDto(Long id, String username, String password, String email, String fullName, UserRole role, boolean active) {
+    public UserDto(Long id, String username, String email, String fullName,
+                   UserRole role, boolean active, Long agencyId, String agencyName) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.email = email;
         this.fullName = fullName;
         this.role = role;
         this.active = active;
+        this.agencyId = agencyId;
+        this.agencyName = agencyName;
     }
 
     public Long getId() {
@@ -37,14 +40,6 @@ public class UserDto {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -77,5 +72,21 @@ public class UserDto {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Long getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(Long agencyId) {
+        this.agencyId = agencyId;
+    }
+
+    public String getAgencyName() {
+        return agencyName;
+    }
+
+    public void setAgencyName(String agencyName) {
+        this.agencyName = agencyName;
     }
 }

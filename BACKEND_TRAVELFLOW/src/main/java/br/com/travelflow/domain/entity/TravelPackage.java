@@ -58,6 +58,10 @@ public class TravelPackage {
     )
     private List<Trip> trips = new ArrayList<>();
     
+    @JsonManagedReference(value = "package-images")
+    @OneToMany(mappedBy = "travelPackage", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PackageImage> images = new ArrayList<>();
+    
     public TravelPackage() {}
     
     public TravelPackage(String name, String description, BigDecimal discountPercentage, Boolean active, Agency agency) {
@@ -85,6 +89,20 @@ public class TravelPackage {
     
     public void removeTrip(Trip trip) {
         trips.remove(trip);
+    }
+    
+    public void addImage(PackageImage image) {
+        images.add(image);
+        image.setTravelPackage(this);
+    }
+    
+    public void removeImage(PackageImage image) {
+        images.remove(image);
+        image.setTravelPackage(null);
+    }
+    
+    public void clearImages() {
+        images.clear();
     }
     
     public BigDecimal calculateTotalPrice() {
@@ -166,5 +184,13 @@ public class TravelPackage {
     
     public void setTrips(List<Trip> trips) {
         this.trips = trips;
+    }
+    
+    public List<PackageImage> getImages() {
+        return images;
+    }
+    
+    public void setImages(List<PackageImage> images) {
+        this.images = images;
     }
 }

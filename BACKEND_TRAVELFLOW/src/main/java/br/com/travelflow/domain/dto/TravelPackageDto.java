@@ -15,6 +15,7 @@ public class TravelPackageDto {
     private BigDecimal discountPercentage;
     private Boolean active;
     private List<TripDto> trips;
+    private List<String> imageUrls;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
@@ -32,6 +33,12 @@ public class TravelPackageDto {
         if (travelPackage.getTrips() != null) {
             this.trips = travelPackage.getTrips().stream()
                 .map(TripDto::new)
+                .collect(Collectors.toList());
+        }
+        
+        if (travelPackage.getImages() != null) {
+            this.imageUrls = travelPackage.getImages().stream()
+                .map(image -> image.getImageUrl())
                 .collect(Collectors.toList());
         }
     }
@@ -83,6 +90,14 @@ public class TravelPackageDto {
     
     public void setTrips(List<TripDto> trips) {
         this.trips = trips;
+    }
+    
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+    
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
     
     public LocalDateTime getCreatedAt() {

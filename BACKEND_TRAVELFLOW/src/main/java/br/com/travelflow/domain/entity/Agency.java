@@ -1,5 +1,6 @@
 package br.com.travelflow.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -50,14 +51,17 @@ public class Agency {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @JsonManagedReference(value = "agency-users")
     @OneToMany(mappedBy = "agency", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();
 
+    @JsonIgnore
     @JsonManagedReference(value = "agency-trips")
     @OneToMany(mappedBy = "agency", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Trip> trips = new ArrayList<>();
 
+    @JsonIgnore
     @JsonManagedReference(value = "agency-vouchers")
     @OneToMany(mappedBy = "agency", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Voucher> vouchers = new ArrayList<>();

@@ -3,6 +3,7 @@ package br.com.travelflow.service;
 import br.com.travelflow.domain.dto.CreatePackageDto;
 import br.com.travelflow.domain.dto.TravelPackageDto;
 import br.com.travelflow.domain.entity.Agency;
+import br.com.travelflow.domain.entity.PackageImage;
 import br.com.travelflow.domain.entity.TravelPackage;
 import br.com.travelflow.domain.entity.Trip;
 import br.com.travelflow.repository.TravelPackageRepository;
@@ -62,9 +63,20 @@ public class TravelPackageService {
         }
         
         saved.setTrips(trips);
+        
+        if (dto.getImageUrls() != null && !dto.getImageUrls().isEmpty()) {
+            for (String imageUrl : dto.getImageUrls()) {
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    PackageImage packageImage = new PackageImage(imageUrl, saved);
+                    saved.addImage(packageImage);
+                }
+            }
+        }
+        
         saved = packageRepository.save(saved);
 
         saved.getTrips().size();
+        saved.getImages().size();
         
         return new TravelPackageDto(saved);
     }
@@ -86,7 +98,18 @@ public class TravelPackageService {
         
         travelPackage.setTrips(trips);
         
+        travelPackage.clearImages();
+        if (dto.getImageUrls() != null && !dto.getImageUrls().isEmpty()) {
+            for (String imageUrl : dto.getImageUrls()) {
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    PackageImage packageImage = new PackageImage(imageUrl, travelPackage);
+                    travelPackage.addImage(packageImage);
+                }
+            }
+        }
+        
         TravelPackage updated = packageRepository.save(travelPackage);
+        updated.getImages().size();
         return new TravelPackageDto(updated);
     }
     
