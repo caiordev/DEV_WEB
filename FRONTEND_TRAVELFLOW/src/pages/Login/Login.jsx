@@ -179,7 +179,7 @@ function Login() {
             </Typography>
             <Typography
               variant="body1"
-              color="text.secondary"
+              color="black"
               textAlign="center"
               sx={{ mb: 4 }}
             >
@@ -212,9 +212,33 @@ function Login() {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Email color="action" />
+                      <Email sx={{ color: '#3b82f6' }} />
                     </InputAdornment>
                   ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    '& fieldset': {
+                      borderColor: 'rgba(59, 130, 246, 0.3)',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#3b82f6',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3b82f6',
+                      borderWidth: '2px',
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: '#374151',
+                    '&.Mui-focused': {
+                      color: '#3b82f6',
+                    },
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    color: '#111827',
+                  },
                 }}
               />
 
@@ -235,7 +259,7 @@ function Login() {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Lock color="action" />
+                      <Lock sx={{ color: '#3b82f6' }} />
                     </InputAdornment>
                   ),
                   endAdornment: (
@@ -244,11 +268,36 @@ function Login() {
                         onClick={() => setShowPassword(!showPassword)}
                         edge="end"
                         aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                        sx={{ color: '#374151' }}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    '& fieldset': {
+                      borderColor: 'rgba(59, 130, 246, 0.3)',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#3b82f6',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3b82f6',
+                      borderWidth: '2px',
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: '#374151',
+                    '&.Mui-focused': {
+                      color: '#3b82f6',
+                    },
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    color: '#111827',
+                  },
                 }}
               />
 
@@ -296,7 +345,7 @@ function Login() {
                   }}
                   onClick={(e) => {
                     e.preventDefault();
-                    alert('Funcionalidade em desenvolvimento');
+                    navigate('/password-reset');
                   }}
                 >
                   Esqueceu sua senha?

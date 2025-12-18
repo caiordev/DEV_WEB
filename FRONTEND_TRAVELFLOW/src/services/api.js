@@ -133,6 +133,15 @@ export const authService = {
     return data;
   },
 
+  async updateProfile(profileData) {
+    const data = await fetchApi('/auth/me', {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    });
+
+    return data;
+  },
+
   /**
    * Obtém o usuário atual do localStorage
    * @returns {Object|null} Dados do usuário ou null
@@ -161,7 +170,7 @@ export const authService = {
    * @returns {Promise<Array>} Lista de usuários
    */
   async getAgencyUsers() {
-    const data = await fetchApi('/users', {
+    const data = await fetchApi('/auth/users', {
       method: 'GET',
     });
 
@@ -182,8 +191,26 @@ export const authService = {
    * @returns {Promise<Array>} Lista de agências
    */
   async getAllAgencies() {
-    const data = await fetchApi('/agencies', {
+    const data = await fetchApi('/auth/agencies', {
       method: 'GET',
+    });
+
+    return data;
+  },
+
+  async requestPasswordReset(email) {
+    const data = await fetchApi('/auth/password-reset/request', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+
+    return data;
+  },
+
+  async confirmPasswordReset(token, newPassword) {
+    const data = await fetchApi('/auth/password-reset/confirm', {
+      method: 'POST',
+      body: JSON.stringify({ token, newPassword }),
     });
 
     return data;

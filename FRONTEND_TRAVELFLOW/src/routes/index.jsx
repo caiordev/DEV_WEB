@@ -6,6 +6,8 @@ import MainLayout from '../components/layout/MainLayout';
 
 // Pages
 import Login from '../pages/Login/Login';
+import PasswordResetRequest from '../pages/PasswordReset/PasswordResetRequest';
+import PasswordResetConfirm from '../pages/PasswordReset/PasswordResetConfirm';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import TripManagement from '../pages/Trips/TripManagement';
 import VoucherGenerator from '../pages/Vouchers/VoucherGenerator';
@@ -33,6 +35,15 @@ function AppRoutes() {
         <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />}
+        />
+
+        <Route
+          path="/password-reset"
+          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <PasswordResetRequest />}
+        />
+        <Route
+          path="/password-reset/confirm"
+          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <PasswordResetConfirm />}
         />
 
         {/* Protected Routes */}

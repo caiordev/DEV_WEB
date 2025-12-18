@@ -50,7 +50,7 @@ export default function AdminPanel() {
 
   const { user: currentUser } = useAuth();
   const navigate = useNavigate();
-  const isSuperAdmin = currentUser?.role === 'SUPERADMIN';
+  const isSuperAdmin = currentUser?.role === 'ADMIN'; //'SUPERADMIN';
 
   useEffect(() => {
     checkSuperAdmin();
@@ -236,7 +236,7 @@ export default function AdminPanel() {
         <Grid item xs={12}>
           <Card elevation={3}>
             <CardContent>
-              <Typography variant="h5" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 600 }}>
+              <Typography variant="h5" color='text.primary' sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 600 }}>
                 <BusinessIcon />
                 Todas as Agências
               </Typography>
@@ -251,7 +251,7 @@ export default function AdminPanel() {
                 <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid', borderColor: 'divider' }}>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ bgcolor: 'grey.100' }}>
+                      <TableRow>
                         <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
                         <TableCell sx={{ fontWeight: 600 }}>Nome</TableCell>
                         <TableCell sx={{ fontWeight: 600 }}>CNPJ</TableCell>
@@ -312,7 +312,7 @@ export default function AdminPanel() {
           </Card>
         </Grid>
 
-        {/* Ações Administrativas */}
+        {/* Ações Administrativas 
         <Grid item xs={12}>
           <Card elevation={3}>
             <CardContent>
@@ -353,6 +353,7 @@ export default function AdminPanel() {
             </CardContent>
           </Card>
         </Grid>
+        */}
       </Grid>
 
       {/* Dialog para criar/editar agência */}

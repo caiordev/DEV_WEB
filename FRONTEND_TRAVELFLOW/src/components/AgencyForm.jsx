@@ -5,9 +5,11 @@ import {
   Button,
   Grid,
   Alert,
-  CircularProgress
+  CircularProgress,
+  Typography,
+  Divider
 } from '@mui/material';
-import { Save as SaveIcon } from '@mui/icons-material';
+import { Save as SaveIcon, Business as BusinessIcon, Person as PersonIcon } from '@mui/icons-material';
 import agencyService from '../services/agencyService';
 
 export default function AgencyForm({ onSuccess, onError, agencyData = null }) {
@@ -17,9 +19,10 @@ export default function AgencyForm({ onSuccess, onError, agencyData = null }) {
     email: agencyData?.email || '',
     phone: agencyData?.phone || '',
     address: agencyData?.address || '',
-    city: agencyData?.city || '',
-    state: agencyData?.state || '',
-    zipCode: agencyData?.zipCode || ''
+    adminUsername: '',
+    adminEmail: '',
+    adminPassword: '',
+    adminFullName: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -91,6 +94,7 @@ export default function AgencyForm({ onSuccess, onError, agencyData = null }) {
             value={formData.name}
             onChange={handleChange}
             disabled={loading}
+            inputProps={{ maxLength: 100 }}
           />
         </Grid>
         <Grid item xs={12} md={4}>
@@ -103,11 +107,11 @@ export default function AgencyForm({ onSuccess, onError, agencyData = null }) {
             onChange={handleCNPJChange}
             disabled={loading}
             placeholder="00.000.000/0000-00"
+            inputProps={{ maxLength: 18 }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            required
             fullWidth
             name="email"
             label="Email"
@@ -115,11 +119,11 @@ export default function AgencyForm({ onSuccess, onError, agencyData = null }) {
             value={formData.email}
             onChange={handleChange}
             disabled={loading}
+            inputProps={{ maxLength: 100 }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            required
             fullWidth
             name="phone"
             label="Telefone"
@@ -127,6 +131,7 @@ export default function AgencyForm({ onSuccess, onError, agencyData = null }) {
             onChange={handlePhoneChange}
             disabled={loading}
             placeholder="(00) 00000-0000"
+            inputProps={{ maxLength: 15 }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -137,39 +142,64 @@ export default function AgencyForm({ onSuccess, onError, agencyData = null }) {
             value={formData.address}
             onChange={handleChange}
             disabled={loading}
+            inputProps={{ maxLength: 200 }}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <Typography variant="h6" sx={{ mt: 2, mb: 1 }} color='text.primary'>
+            Dados do Administrador da Agência
+          </Typography>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <TextField
+            required
+            fullWidth
+            name="adminUsername"
+            label="Nome de Usuário do Administrador"
+            value={formData.adminUsername}
+            onChange={handleChange}
+            disabled={loading}
+            inputProps={{ maxLength: 50 }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
+            required
             fullWidth
-            name="city"
-            label="Cidade"
-            value={formData.city}
+            name="adminEmail"
+            label="Email do Administrador"
+            type="email"
+            value={formData.adminEmail}
             onChange={handleChange}
             disabled={loading}
+            inputProps={{ maxLength: 100 }}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <TextField
+            required
             fullWidth
-            name="state"
-            label="Estado"
-            value={formData.state}
+            name="adminPassword"
+            label="Senha do Administrador"
+            type="password"
+            value={formData.adminPassword}
             onChange={handleChange}
             disabled={loading}
-            inputProps={{ maxLength: 2 }}
-            placeholder="UF"
+            inputProps={{ minLength: 6 }}
           />
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={6}>
           <TextField
+            required
             fullWidth
-            name="zipCode"
-            label="CEP"
-            value={formData.zipCode}
+            name="adminFullName"
+            label="Nome Completo do Administrador"
+            value={formData.adminFullName}
             onChange={handleChange}
             disabled={loading}
-            placeholder="00000-000"
+            inputProps={{ maxLength: 100 }}
           />
         </Grid>
       </Grid>

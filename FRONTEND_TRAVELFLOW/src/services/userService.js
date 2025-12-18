@@ -7,7 +7,7 @@ const userService = {
    */
   getAllUsers: async () => {
     try {
-      const response = await api.get('/users');
+      const response = await api.get('/auth/users');
       return response.data || response;
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -37,7 +37,7 @@ const userService = {
    */
   createUser: async (userData) => {
     try {
-      const response = await api.post('/users', userData);
+      const response = await api.post('/auth/register', userData);
       return response.data || response;
     } catch (error) {
       console.error('Error creating user:', error);

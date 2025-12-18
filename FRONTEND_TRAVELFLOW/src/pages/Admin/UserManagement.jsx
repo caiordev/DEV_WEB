@@ -208,7 +208,7 @@ export default function UserManagement() {
             <TableContainer component={Paper} elevation={0}>
               <Table>
                 <TableHead>
-                  <TableRow sx={{ bgcolor: 'grey.100' }}>
+                  <TableRow>
                     <TableCell sx={{ fontWeight: 600 }}>Nome Completo</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Usuário</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>

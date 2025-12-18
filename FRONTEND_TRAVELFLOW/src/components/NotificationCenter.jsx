@@ -191,7 +191,7 @@ export default function NotificationCenter({ compact = false }) {
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">Central de Notificações</Typography>
+        <Typography variant="h4" color='primary.main'>Central de Notificações</Typography>
         {unreadCount > 0 && (
           <Button
             variant="contained"

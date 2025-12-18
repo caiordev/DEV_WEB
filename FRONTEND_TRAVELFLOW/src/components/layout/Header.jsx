@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useThemeMode } from '../../contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
+import Profile from '../../pages/Profile/Profile';
 
 function Header() {
   const { user, logout, isAuthenticated } = useAuth();
   const { mode, toggleTheme } = useThemeMode();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -19,6 +21,15 @@ function Header() {
     setAnchorEl(null);
   };
 
+  const handleOpenProfile = () => {
+    handleClose();
+    setProfileOpen(true);
+  };
+
+  const handleCloseProfile = () => {
+    setProfileOpen(false);
+  };
+
   const handleLogout = () => {
     logout();
     handleClose();
@@ -26,6 +37,7 @@ function Header() {
   };
 
   return (
+    <>
     <AppBar position="static" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, color: 'text.primary' }}>
@@ -63,7 +75,7 @@ function Header() {
               <MenuItem onClick={() => { handleClose(); navigate('/dashboard'); }}>
                 Dashboard
               </MenuItem>
-              <MenuItem onClick={() => { handleClose(); navigate('/profile'); }}>
+              <MenuItem onClick={handleOpenProfile}>
                 Perfil
               </MenuItem>
               <MenuItem onClick={handleLogout}>Sair</MenuItem>
@@ -76,6 +88,8 @@ function Header() {
         )}
       </Toolbar>
     </AppBar>
+    <Profile open={profileOpen} onClose={handleCloseProfile} />
+    </>
   );
 }
 

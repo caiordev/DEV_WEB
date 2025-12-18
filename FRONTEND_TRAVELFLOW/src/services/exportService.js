@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { autoTable } from 'jspdf-autotable';
 
 const exportService = {
   /**
@@ -66,7 +66,7 @@ const exportService = {
       doc.setFontSize(14);
       doc.text('Estatísticas Gerais', 14, 42);
       
-      doc.autoTable({
+      autoTable(doc, {
         startY: 48,
         head: [['Métrica', 'Valor']],
         body: [
@@ -91,7 +91,7 @@ const exportService = {
         voucher.voucherTrips.map(vt => vt.trip.destination).join(', ')
       ]);
 
-      doc.autoTable({
+      autoTable(doc, {
         startY: doc.lastAutoTable.finalY + 20,
         head: [['Voucher', 'Cliente', 'Data', 'Valor', 'Destinos']],
         body: tableData,
@@ -149,7 +149,7 @@ const exportService = {
       doc.setFontSize(14);
       doc.text('Informações do Cliente', 14, 42);
       
-      doc.autoTable({
+      autoTable(doc, {
         startY: 48,
         head: [['Campo', 'Valor']],
         body: [
@@ -168,7 +168,7 @@ const exportService = {
       doc.setFontSize(14);
       doc.text('Estatísticas', 14, doc.lastAutoTable.finalY + 15);
 
-      doc.autoTable({
+      autoTable(doc, {
         startY: doc.lastAutoTable.finalY + 20,
         head: [['Métrica', 'Valor']],
         body: [
@@ -191,7 +191,7 @@ const exportService = {
         voucher.status || 'Ativo'
       ]);
 
-      doc.autoTable({
+      autoTable(doc, {
         startY: doc.lastAutoTable.finalY + 20,
         head: [['Voucher', 'Data', 'Destinos', 'Valor', 'Status']],
         body: tableData,

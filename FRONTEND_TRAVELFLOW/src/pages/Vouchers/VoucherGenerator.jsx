@@ -389,21 +389,8 @@ export default function VoucherGenerator() {
     setOpenEmailDialog(false);
   };
   
-  const handlePrintPreview = async () => {
-    setIsLoading(true);
-    
-    const saved = await saveSoldTrip();
-    
-    if (saved) {
-      setTimeout(() => {
-        setIsLoading(false);
-        setSnackbarMessage('Voucher gerado com sucesso!');
-        setSnackbarSeverity('success');
-        setOpenSnackbar(true);
-      }, 1500);
-    } else {
-      setIsLoading(false);
-    }
+  const handlePrintPreview = () => {
+    window.print();
   };
   
   const handleCloseSnackbar = () => {
@@ -420,14 +407,14 @@ export default function VoucherGenerator() {
   return (
     <>
       <Paper elevation={3} sx={{ p: 3, mt: 2 }}>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom color='primary.main'>
           Gerador de Voucher
         </Typography>
         
         <Box sx={{ mt: 2 }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>Informações do Cliente</Typography>
+              <Typography variant="h6" gutterBottom color='text.primary'>Informações do Cliente</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
                   <TextField
@@ -473,7 +460,7 @@ export default function VoucherGenerator() {
             </Grid>
             
             <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>Selecione os Destinos</Typography>
+              <Typography variant="h6" gutterBottom color='text.primary'>Selecione os Destinos</Typography>
               <FormControl fullWidth>
                 <InputLabel id="trip-select-label">Destinos</InputLabel>
                 <Select
@@ -528,7 +515,7 @@ export default function VoucherGenerator() {
             
             {selectedTrips.length > 0 && (
               <Grid item xs={12}>
-                <Typography variant="h6" gutterBottom>Destinos Selecionados</Typography>
+                <Typography variant="h6" gutterBottom color='text.primary'>Destinos Selecionados</Typography>
                 <TableContainer component={Paper}>
                   <Table size="small">
                     <TableHead>
@@ -653,7 +640,7 @@ export default function VoucherGenerator() {
       
       {selectedTrips.length > 0 && (
         <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom color='text.primary'>
             Pré-visualização do Voucher
           </Typography>
           
@@ -664,31 +651,31 @@ export default function VoucherGenerator() {
             </Box>
             
             <CardContent>
-              <Typography variant="h6" gutterBottom>Informações do Cliente:</Typography>
+              <Typography variant="h6" gutterBottom color='text.primary'>Informações do Cliente:</Typography>
               <Grid container spacing={2} sx={{ mb: 3, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
                 <Grid item xs={12} sm={4}>
-                  <Typography variant="subtitle2" fontWeight="bold">Nome:</Typography>
+                  <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>Nome:</Typography>
                   <Typography variant="body1">{customerInfo.name}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Typography variant="subtitle2" fontWeight="bold">CPF:</Typography>
+                  <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>CPF:</Typography>
                   <Typography variant="body1">{customerInfo.cpf}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Typography variant="subtitle2" fontWeight="bold">Telefone:</Typography>
+                  <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>Telefone:</Typography>
                   <Typography variant="body1">{customerInfo.phone}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Typography variant="subtitle2" fontWeight="bold">Email:</Typography>
+                  <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>Email:</Typography>
                   <Typography variant="body1">{customerInfo.email}</Typography>
                 </Grid>
               </Grid>
-              <Typography variant="h6" gutterBottom>Destinos Incluídos:</Typography>
+              <Typography variant="h6" gutterBottom color='text.primary'>Destinos Incluídos:</Typography>
               
               {selectedTripObjects.map((trip, index) => (
                 <Card key={trip.id} sx={{ mb: 3, border: 1, borderColor: 'divider' }}>
                   <Box sx={{ bgcolor: 'action.hover', p: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="subtitle1" fontWeight="bold">Destino {index + 1}: {trip.destination}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" color='text.primary'>Destino {index + 1}: {trip.destination}</Typography>
                   </Box>
                   
                   <Grid container>
@@ -696,27 +683,27 @@ export default function VoucherGenerator() {
                       <CardContent>
                         <Grid container spacing={2}>
                           <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2" fontWeight="bold">Localização:</Typography>
+                            <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>Localização:</Typography>
                             <Typography variant="body2" gutterBottom>{trip.location}</Typography>
                           </Grid>
                           
                           <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2" fontWeight="bold">Data:</Typography>
+                            <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>Data:</Typography>
                             <Typography variant="body2" gutterBottom>{trip.date || 'Não especificada'}</Typography>
                           </Grid>
                           
                           <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2" fontWeight="bold">Passageiros:</Typography>
+                            <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>Passageiros:</Typography>
                             <Typography variant="body2" gutterBottom>{trip.passengerCount || 1}</Typography>
                           </Grid>
                           
                           <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2" fontWeight="bold">Preço por pessoa:</Typography>
+                            <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>Preço por pessoa:</Typography>
                             <Typography variant="body2" gutterBottom>R$ {trip.pricePerPerson}</Typography>
                           </Grid>
                           
                           <Grid item xs={12} sm={4}>
-                            <Typography variant="subtitle2" fontWeight="bold">Valor total:</Typography>
+                            <Typography variant="subtitle2" fontWeight="bold" color='text.primary'>Valor total:</Typography>
                             <Typography variant="body2" gutterBottom>R$ {trip.totalPrice.toFixed(2)}</Typography>
                           </Grid>
                         </Grid>
@@ -729,17 +716,17 @@ export default function VoucherGenerator() {
               <Box sx={{ bgcolor: 'action.hover', p: 2, mt: 2, borderRadius: 1 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="subtitle1" fontWeight="bold">Total de destinos:</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" color='text.primary'>Total de destinos:</Typography>
                     <Typography variant="body1" gutterBottom>{selectedTripObjects.length}</Typography>
                   </Grid>
                   
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="subtitle1" fontWeight="bold">Valor total:</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" color='text.primary'>Valor total:</Typography>
                     <Typography variant="body1" gutterBottom>R$ {totalPrice}</Typography>
                   </Grid>
                   
                   <Grid item xs={12}>
-                    <Typography variant="subtitle1" fontWeight="bold">Data de emissão:</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" color='text.primary'>Data de emissão:</Typography>
                     <Typography variant="body1" gutterBottom>
                       {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}
                     </Typography>
@@ -748,8 +735,8 @@ export default function VoucherGenerator() {
               </Box>
               
               <Divider sx={{ my: 2 }} />
-              <Typography variant="subtitle1" fontWeight="bold">Instruções:</Typography>
-              <Typography variant="body2" paragraph>
+              <Typography variant="subtitle1" fontWeight="bold" color='text.primary'>Instruções:</Typography>
+              <Typography variant="body2" paragraph color='text.primary'>
                 1. Apresente este voucher no momento do check-in em cada destino.<br />
                 2. Documento válido mediante apresentação de documento com foto.<br />
                 3. Em caso de dúvidas, entre em contato com nossa central de atendimento.

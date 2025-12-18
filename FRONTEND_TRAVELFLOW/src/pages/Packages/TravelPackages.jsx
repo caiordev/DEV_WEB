@@ -26,7 +26,8 @@ import {
   Alert,
   CircularProgress,
   InputAdornment,
-  Divider
+  Divider,
+  Snackbar
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -54,6 +55,8 @@ export default function TravelPackages() {
   const [loading, setLoading] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [packageToDelete, setPackageToDelete] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   
   const [selectedImages, setSelectedImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -201,6 +204,36 @@ export default function TravelPackages() {
     setSelectedImages(prev => prev.filter((_, i) => i !== index));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.name || formData.name.trim() === '') {
+      newErrors.name = 'Nome do pacote é obrigatório';
+    }
+    
+    if (!formData.description || formData.description.trim() === '') {
+      newErrors.description = 'Descrição é obrigatória';
+    }
+    
+    if (!formData.tripIds || formData.tripIds.length === 0) {
+      newErrors.tripIds = 'Selecione pelo menos um destino';
+    }
+    
+    if (formData.discountPercentage < 0 || formData.discountPercentage > 100) {
+      newErrors.discountPercentage = 'Desconto deve estar entre 0 e 100%';
+    }
+    
+    return newErrors;
+  };
+
+  const showSnackbar = (message, severity = 'success') => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -274,7 +307,7 @@ export default function TravelPackages() {
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">Pacotes de Viagem</Typography>
+        <Typography variant="h4" color='text.primary'>Pacotes de Viagem</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -297,7 +330,12 @@ export default function TravelPackages() {
             const prices = calculatePackagePrice(pkg);
             return (
               <Grid item xs={12} sm={6} md={4} key={pkg.id}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Card sx={{ 
+                  height: '100%', 
+                  minHeight: 500,
+                  display: 'flex', 
+                  flexDirection: 'column'
+                }}>
                   {pkg.imageUrls?.length > 0 ? (
                     <CardMedia
                       component="img"
@@ -315,13 +353,18 @@ export default function TravelPackages() {
                       sx={{ objectFit: 'cover', borderRadius: 1 }}
                     />
                   ) : (
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image={'placeholder-image-url'}
-                      alt={pkg.name}
-                      sx={{ objectFit: 'cover', borderRadius: 1 }}
-                    />
+                    <Box
+                      sx={{
+                        height: 140,
+                        bgcolor: 'grey.200',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 1
+                      }}
+                    >
+                      <PackageIcon sx={{ fontSize: 60, color: 'grey.400' }} />
+                    </Box>
                   )}
                   {pkg.imageUrls?.length > 1 && (
                     <Box sx={{ display: 'flex', overflowX: 'auto', mt: 1, pb: 1 }}>
@@ -341,7 +384,7 @@ export default function TravelPackages() {
                   )}
                   <CardContent sx={{ flexGrow: 1, pb: 1 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2, mt: 1 }}>
-                      <Typography variant="h6" component="h3" sx={{ fontWeight: 600 }}>
+                      <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
                         {pkg.name}
                       </Typography>
                       {pkg.discountPercentage > 0 && (
@@ -458,13 +501,16 @@ export default function TravelPackages() {
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ pt: 3 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              {/* <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
-                Informações do Pacote
-              </Typography> */}
-            </Grid>
-            
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: 'text.primary' }}>
+              Informações Básicas
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Configure as informações principais do pacote de viagem
+            </Typography>
+          </Box>
+
+          <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12} md={8}>
               <TextField
                 fullWidth
@@ -516,13 +562,20 @@ export default function TravelPackages() {
                 helperText="Forneça uma descrição atrativa do pacote"
               />
             </Grid>
+          </Grid>
 
-            <Grid item xs={12}>
-              {/* <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, mt: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
-                Destinos Incluídos
-              </Typography> */}
-            </Grid>
+          <Divider sx={{ my: 3 }} />
+
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: 'text.primary' }}>
+              Destinos Incluídos
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Selecione os destinos que fazem parte deste pacote
+            </Typography>
+          </Box>
             
+          <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <InputLabel>Selecione os Destinos</InputLabel>
@@ -573,11 +626,21 @@ export default function TravelPackages() {
                 </Typography>
               )}
             </Grid>
+          </Grid>
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
-              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600 }}>
-                Imagens do Pacote
-              </Typography>
+          <Divider sx={{ my: 3 }} />
+
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: 'text.primary' }}>
+              Imagens do Pacote
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Adicione imagens atrativas para apresentar o pacote
+            </Typography>
+          </Box>
+
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid item xs={12}>
               <input
                 type="file"
                 accept="image/*"
@@ -630,11 +693,21 @@ export default function TravelPackages() {
                 </Grid>
               )}
             </Grid>
+          </Grid>
 
+          <Divider sx={{ my: 3 }} />
+
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: 'text.primary' }}>
+              Desconto Promocional
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Configure um desconto opcional para o pacote
+            </Typography>
+          </Box>
+
+          <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
-                Desconto Promocional
-              </Typography>
               <TextField
                 fullWidth
                 label="Desconto Promocional"
@@ -650,82 +723,80 @@ export default function TravelPackages() {
                 }}
               />
             </Grid>
+          </Grid>
 
-            {formData.tripIds.length > 0 && (
-              <Grid item xs={12}>
-                <Box 
-                  sx={{ 
-                    p: 3, 
-                    mt: 2,
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    borderRadius: 2,
-                    color: 'white',
-                    boxShadow: '0 4px 20px rgba(102, 126, 234, 0.3)'
-                  }}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <OfferIcon sx={{ fontSize: 24 }} />
-                    Resumo do Pacote
-                  </Typography>
-                  
-                  <Grid container spacing={2}>
+          {formData.tripIds.length > 0 && (
+            <Box 
+              sx={{ 
+                p: 3, 
+                mt: 2,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                borderRadius: 2,
+                color: 'white',
+                boxShadow: '0 4px 20px rgba(102, 126, 234, 0.3)'
+              }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <OfferIcon sx={{ fontSize: 24 }} />
+                Resumo do Pacote
+              </Typography>
+              
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ bgcolor: 'rgba(255,255,255,0.15)', p: 2, borderRadius: 1 }}>
+                    <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                      Valor Total dos Destinos
+                    </Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 700, mt: 0.5 }}>
+                      R$ {trips
+                        .filter(t => formData.tripIds.includes(t.id))
+                        .reduce((sum, t) => sum + t.pricePerPerson, 0)
+                        .toFixed(2)}
+                    </Typography>
+                  </Box>
+                </Grid>
+                
+                {formData.discountPercentage > 0 && (
+                  <>
                     <Grid item xs={12} sm={6}>
                       <Box sx={{ bgcolor: 'rgba(255,255,255,0.15)', p: 2, borderRadius: 1 }}>
                         <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                          Valor Total dos Destinos
+                          Valor com Desconto
                         </Typography>
-                        <Typography variant="h5" sx={{ fontWeight: 700, mt: 0.5 }}>
-                          R$ {trips
-                            .filter(t => formData.tripIds.includes(t.id))
-                            .reduce((sum, t) => sum + t.pricePerPerson, 0)
-                            .toFixed(2)}
+                        <Typography variant="h5" sx={{ fontWeight: 700, mt: 0.5, color: '#4ade80' }}>
+                          R$ {(
+                            trips
+                              .filter(t => formData.tripIds.includes(t.id))
+                              .reduce((sum, t) => sum + t.pricePerPerson, 0) *
+                            (1 - formData.discountPercentage / 100)
+                          ).toFixed(2)}
                         </Typography>
                       </Box>
                     </Grid>
                     
-                    {formData.discountPercentage > 0 && (
-                      <>
-                        <Grid item xs={12} sm={6}>
-                          <Box sx={{ bgcolor: 'rgba(255,255,255,0.15)', p: 2, borderRadius: 1 }}>
-                            <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                              Valor com Desconto
-                            </Typography>
-                            <Typography variant="h5" sx={{ fontWeight: 700, mt: 0.5, color: '#4ade80' }}>
-                              R$ {(
-                                trips
-                                  .filter(t => formData.tripIds.includes(t.id))
-                                  .reduce((sum, t) => sum + t.pricePerPerson, 0) *
-                                (1 - formData.discountPercentage / 100)
-                              ).toFixed(2)}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        
-                        <Grid item xs={12}>
-                          <Box sx={{ bgcolor: 'rgba(74, 222, 128, 0.2)', p: 2, borderRadius: 1, textAlign: 'center' }}>
-                            <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                              💰 Economia de R$ {(
-                                trips
-                                  .filter(t => formData.tripIds.includes(t.id))
-                                  .reduce((sum, t) => sum + t.pricePerPerson, 0) *
-                                (formData.discountPercentage / 100)
-                              ).toFixed(2)} ({formData.discountPercentage}% de desconto)
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      </>
-                    )}
-                    
                     <Grid item xs={12}>
-                      <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                        📍 {formData.tripIds.length} {formData.tripIds.length === 1 ? 'destino incluído' : 'destinos incluídos'} neste pacote
-                      </Typography>
+                      <Box sx={{ bgcolor: 'rgba(74, 222, 128, 0.2)', p: 2, borderRadius: 1, textAlign: 'center' }}>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                          💰 Economia de R$ {(
+                            trips
+                              .filter(t => formData.tripIds.includes(t.id))
+                              .reduce((sum, t) => sum + t.pricePerPerson, 0) *
+                            (formData.discountPercentage / 100)
+                          ).toFixed(2)} ({formData.discountPercentage}% de desconto)
+                        </Typography>
+                      </Box>
                     </Grid>
-                  </Grid>
-                </Box>
+                  </>
+                )}
+                
+                <Grid item xs={12}>
+                  <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                    📍 {formData.tripIds.length} {formData.tripIds.length === 1 ? 'destino incluído' : 'destinos incluídos'} neste pacote
+                  </Typography>
+                </Grid>
               </Grid>
-            )}
-          </Grid>
+            </Box>
+          )}
         </DialogContent>
         <Divider />
         <DialogActions sx={{ p: 2.5, gap: 1 }}>
@@ -779,6 +850,18 @@ export default function TravelPackages() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar para mensagens */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

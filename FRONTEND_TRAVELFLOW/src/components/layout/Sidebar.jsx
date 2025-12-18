@@ -29,7 +29,8 @@ import {
   Menu as MenuIcon,
   Notifications as NotificationsIcon,
   ManageAccounts as ManageAccountsIcon,
-  SupervisorAccount as SuperAdminIcon
+  SupervisorAccount as SuperAdminIcon,
+  CalendarMonth as CalendarIcon
 } from '@mui/icons-material';
 
 const drawerWidth = 240;
@@ -67,7 +68,7 @@ function Sidebar() {
     { text: 'Destinos', icon: <FlightIcon />, path: '/trips' },
     { text: 'Vouchers', icon: <VoucherIcon />, path: '/vouchers' },
     { text: 'Pacotes', icon: <PackageIcon />, path: '/packages' },
-    { text: 'Calendário de Pacotes', icon: <PackageIcon />, path: '/package-calendar' },
+    { text: 'Calendário', icon: <CalendarIcon />, path: '/package-calendar' },
     { text: 'Clientes', icon: <PeopleIcon />, path: '/customers' },
     { text: 'Notificações', icon: <NotificationsIcon />, path: '/notifications' },
   ];

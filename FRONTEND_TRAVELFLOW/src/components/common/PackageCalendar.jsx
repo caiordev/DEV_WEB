@@ -10,7 +10,13 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  CircularProgress
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -27,10 +33,10 @@ import {
   subMonths,
   isSameMonth,
   isSameDay,
-  isToday
+  isToday,
+  parse
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import packageService from '../../services/packageService';
 import voucherService from '../../services/voucherService';
 
 export default function PackageCalendar() {
@@ -39,7 +45,9 @@ export default function PackageCalendar() {
   const [loading, setLoading] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedDayPackages, setSelectedDayPackages] = useState([]);
+  const [selectedDayEvents, setSelectedDayEvents] = useState([]);
+  const [filterType, setFilterType] = useState('viagens');
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -48,55 +56,87 @@ export default function PackageCalendar() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const packageData = await packageService.getAllPackages();
-      setPackages(packageData);
       const voucherData = await voucherService.getAllVouchers();
       setVouchers(voucherData);
+      checkUpcomingTrips(voucherData);
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-      setPackages([]);
+      console.error('Error loading data:', error);
       setVouchers([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const nextMonth = () => {
-    setCurrentMonth(addMonths(currentMonth, 1));
-  };
+  const checkUpcomingTrips = (voucherData) => {
+    const now = new Date();
+    const fortyEightHoursLater = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+    const upcomingTrips = [];
 
-  const prevMonth = () => {
-    setCurrentMonth(subMonths(currentMonth, 1));
-  };
-
-  const getPackagesForDay = (day) => {
-    const dayPackages = [];
-    vouchers.forEach(voucher => {
-      voucher.voucherTrips?.forEach(voucherTrip => {
-        if (voucherTrip.tripDate && isSameDay(new Date(voucherTrip.tripDate), day)) {
-          const pkg = packages.find(p =>
-            p.trips?.some(t => t.id === voucherTrip.trip?.id) ||
-            voucher.packageId === p.id
-          );
-          if (pkg && !dayPackages.some(dp => dp.id === pkg.id)) {
-            dayPackages.push(pkg);
+    voucherData.forEach(voucher => {
+      voucher.voucherTrips?.forEach(trip => {
+        if (trip.tripDate) {
+          const tripDate = new Date(trip.tripDate + 'T00:00:00');
+          if (tripDate >= now && tripDate <= fortyEightHoursLater) {
+            upcomingTrips.push({
+              voucherNumber: voucher.voucherNumber,
+              destination: trip.trip?.destination || 'N/A',
+              tripDate: trip.tripDate,
+              customerName: voucher.customer?.name || 'N/A'
+            });
           }
         }
       });
     });
-    return dayPackages;
+
+    if (upcomingTrips.length > 0) {
+      setNotification({
+        message: `Atenção: ${upcomingTrips.length} viagem(ns) em menos de 48 horas!`,
+        severity: 'warning',
+        details: upcomingTrips
+      });
+    } else {
+      setNotification(null);
+    }
   };
 
-  const handleDayClick = (event, day, packages) => {
-    if (packages.length > 0) {
+  function nextMonth() {
+    setCurrentMonth(addMonths(currentMonth, 1));
+  }
+
+  function prevMonth() {
+    setCurrentMonth(subMonths(currentMonth, 1));
+  }
+
+  const getEventsForDay = (day) => {
+    const events = [];
+    if (filterType === 'vendas') {
+      vouchers.forEach(voucher => {
+        if (voucher.saleDate && isSameDay(new Date(voucher.saleDate), day)) {
+          events.push({ type: 'sale', voucher });
+        }
+      });
+    } else {
+      vouchers.forEach(voucher => {
+        voucher.voucherTrips?.forEach(trip => {
+          if (trip.tripDate && isSameDay(new Date(trip.tripDate + 'T00:00:00'), day)) {
+            events.push({ type: 'trip', voucher, trip });
+          }
+        });
+      });
+    }
+    return events;
+  };
+
+  const handleDayClick = (event, day, events) => {
+    if (events.length > 0) {
       setAnchorEl(event.currentTarget);
-      setSelectedDayPackages(packages);
+      setSelectedDayEvents(events);
     }
   };
 
   const handleClosePopover = () => {
     setAnchorEl(null);
-    setSelectedDayPackages([]);
+    setSelectedDayEvents([]);
   };
 
   const renderCalendarDays = () => {
@@ -173,7 +213,7 @@ export default function PackageCalendar() {
           gridTemplateColumns: 'repeat(7, 1fr)'
         }}>
           {days.map((day, index) => {
-            const dayPackages = getPackagesForDay(day);
+            const dayEvents = getEventsForDay(day);
             const isCurrentMonth = isSameMonth(day, currentMonth);
             const isTodayDate = isToday(day);
             const row = Math.floor(index / 7);
@@ -182,17 +222,21 @@ export default function PackageCalendar() {
             return (
               <Box
                 key={index}
-                onClick={(e) => handleDayClick(e, day, dayPackages)}
+                onClick={(e) => handleDayClick(e, day, dayEvents)}
                 sx={{
                   minHeight: 100,
                   borderRight: col < 6 ? '1px solid' : 'none',
                   borderBottom: row < Math.floor(days.length / 7) ? '1px solid' : 'none',
                   borderColor: 'divider',
                   p: 1,
-                  cursor: dayPackages.length > 0 ? 'pointer' : 'default',
+                  cursor: dayEvents.length > 0 ? 'pointer' : 'default',
                   position: 'relative',
-                  transition: 'background-color 0.2s',
-                  '&:hover': dayPackages.length > 0 ? {
+                  transition: 'all 0.2s',
+                  backgroundColor: 'transparent',
+                  outline: isTodayDate ? '2px solid' : 'none',
+                  outlineColor: isTodayDate ? 'primary.main' : undefined,
+                  borderRadius: isTodayDate ? 1 : 0,
+                  '&:hover': dayEvents.length > 0 ? {
                     backgroundColor: 'action.hover'
                   } : {}
                 }}
@@ -206,28 +250,43 @@ export default function PackageCalendar() {
                   {format(day, 'd')}
                 </Typography>
 
-                {dayPackages.length > 0 && (
+                {dayEvents.length > 0 && (
                   <Box sx={{ mt: 0.5 }}>
-                    {dayPackages.slice(0, 2).map((pkg, idx) => (
+                    {dayEvents.slice(0, 2).map((event, idx) => (
                       <Box
                         key={idx}
                         sx={{
-                          fontSize: '0.7rem',
+                          fontSize: '0.6rem',
                           mb: 0.5,
                           px: 0.5,
                           py: 0.25,
                           backgroundColor: 'primary.main',
                           color: 'primary.contrastText',
                           borderRadius: 0.5,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
+                          lineHeight: 1.2,
+                          maxHeight: '3rem',
+                          overflow: 'hidden'
                         }}
                       >
-                        {pkg.name}
+                        {event.type === 'sale' ? (
+                          <>
+                            <Box sx={{ fontWeight: 'bold' }}>Venda {event.voucher.voucherNumber}</Box>
+                            <Box>Cliente: {event.voucher.customer?.name || 'N/A'}</Box>
+                            <Box>Valor: R$ {event.voucher.totalValue?.toFixed(2) || '0.00'}</Box>
+                            <Box>Destinos: {event.voucher.voucherTrips?.length || 0}</Box>
+                          </>
+                        ) : (
+                          <>
+                            <Box sx={{ fontWeight: 'bold' }}>Viagem {event.trip.trip?.destination || 'N/A'}</Box>
+                            <Box>Voucher: {event.voucher.voucherNumber}</Box>
+                            <Box>Cliente: {event.voucher.customer?.name || 'N/A'}</Box>
+                            <Box>Data: {event.trip.tripDate}</Box>
+                            <Box>Passageiros: {event.trip.passengerCount}</Box>
+                          </>
+                        )}
                       </Box>
                     ))}
-                    {dayPackages.length > 2 && (
+                    {dayEvents.length > 2 && (
                       <Typography
                         variant="caption"
                         sx={{
@@ -235,7 +294,7 @@ export default function PackageCalendar() {
                           color: 'text.secondary'
                         }}
                       >
-                        +{dayPackages.length - 2}
+                        +{dayEvents.length - 2}
                       </Typography>
                     )}
                   </Box>
@@ -251,7 +310,21 @@ export default function PackageCalendar() {
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h4">Calendário de Pacotes</Typography>
+        <Typography variant="h4" color='primary.main'>Calendário</Typography>
+      </Box>
+
+      <Box sx={{ mb: 2 }}>
+        <FormControl size="small">
+          <InputLabel>Filtro</InputLabel>
+          <Select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            label="Filtro"
+          >
+            <MenuItem value="vendas">Vendas</MenuItem>
+            <MenuItem value="viagens">Viagens</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
 
       {loading ? (
@@ -262,7 +335,33 @@ export default function PackageCalendar() {
         renderCalendar()
       )}
 
-      {/* Popover para mostrar pacotes do dia */}
+      {notification && (
+        <Snackbar
+          open={Boolean(notification)}
+          autoHideDuration={10000}
+          onClose={() => setNotification(null)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert 
+            onClose={() => setNotification(null)} 
+            severity={notification.severity} 
+            sx={{ width: '100%' }}
+          >
+            {notification.message}
+            {notification.details && (
+              <Box sx={{ mt: 1 }}>
+                {notification.details.map((trip, idx) => (
+                  <Typography key={idx} variant="body2">
+                    Voucher {trip.voucherNumber} - {trip.destination} ({trip.customerName}) - {new Date(trip.tripDate).toLocaleString('pt-BR')}
+                  </Typography>
+                ))}
+              </Box>
+            )}
+          </Alert>
+        </Snackbar>
+      )}
+
+      {/* Popover para mostrar vouchers do dia */}
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -277,30 +376,46 @@ export default function PackageCalendar() {
         }}
       >
         <Box sx={{ p: 2, minWidth: 320, maxWidth: 400 }}>
-          <Typography variant="h6" gutterBottom>
-            Pacotes
+          <Typography variant="h6" gutterBottom color='text.primary'>
+            {filterType === 'vendas' ? 'Vendas' : 'Viagens'}
           </Typography>
           <Divider sx={{ mb: 2 }} />
           <List dense>
-            {selectedDayPackages.map((pkg, index) => (
+            {selectedDayEvents.map((event, index) => (
               <Box key={index}>
                 <ListItem sx={{ px: 0, alignItems: 'flex-start' }}>
                   <ListItemText
                     primary={
                       <Typography variant="body1" fontWeight="bold">
-                        {pkg.name}
+                        {event.type === 'sale' ? `Venda ${event.voucher.voucherNumber}` : `Viagem ${event.trip.trip?.destination || 'N/A'}`}
                       </Typography>
                     }
                     secondary={
                       <>
                         <Typography variant="body2" color="text.secondary">
-                          {pkg.description?.substring(0, 50) || 'Sem descrição'}
+                          Cliente: {event.voucher.customer?.name || 'N/A'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Valor: R$ {event.voucher.totalValue?.toFixed(2) || '0.00'}
+                        </Typography>
+                        {event.type === 'trip' && (
+                          <>
+                            <Typography variant="body2" color="text.secondary">
+                              Data: {event.trip.tripDate}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Passageiros: {event.trip.passengerCount}
+                            </Typography>
+                          </>
+                        )}
+                        <Typography variant="body2" color="text.secondary">
+                          Destinos: {event.voucher.voucherTrips?.length || 0}
                         </Typography>
                       </>
                     }
                   />
                 </ListItem>
-                {index < selectedDayPackages.length - 1 && <Divider />}
+                {index < selectedDayEvents.length - 1 && <Divider />}
               </Box>
             ))}
           </List>

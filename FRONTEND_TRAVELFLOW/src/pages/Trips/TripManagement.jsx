@@ -479,7 +479,7 @@ export default function TripManagement() {
       
       {/* Lista de Destinos Cadastrados */}
       <Paper elevation={3} sx={{ p: 3 }}>
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mb: 3, color: 'text.primary'}}>
           Destinos Cadastrados
         </Typography>
         
@@ -495,18 +495,23 @@ export default function TripManagement() {
           <Grid container spacing={3}>
             {(trips || []).map((trip) => (
               <Grid item xs={12} sm={6} md={4} key={trip.id}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Card sx={{ height: '100%', width: '350px', display: 'flex', flexDirection: 'column' }}>
                   {trip.imageUrl && (
                     <CardMedia
                       component="img"
                       height="200"
                       image={trip.imageUrl}
                       alt={trip.destination}
-                      sx={{ objectFit: 'cover' }}
+                      sx={{    
+                        width: '350px',
+                        height: 200,
+                        objectFit: 'cover',
+                        flexShrink: 0,
+                      }}
                     />
                   )}
                   <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
+                    <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }} color="text.primary">
                       {trip.destination}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" gutterBottom>

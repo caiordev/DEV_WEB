@@ -7,7 +7,7 @@ const agencyService = {
    */
   getAllAgencies: async () => {
     try {
-      const response = await api.get('/agencies');
+      const response = await api.get('/auth/agencies/all');
       return response.data || response;
     } catch (error) {
       console.error('Error fetching agencies:', error);
@@ -37,7 +37,7 @@ const agencyService = {
    */
   createAgency: async (agencyData) => {
     try {
-      const response = await api.post('/agencies', agencyData);
+      const response = await api.post('/auth/agencies', agencyData);
       return response.data || response;
     } catch (error) {
       console.error('Error creating agency:', error);

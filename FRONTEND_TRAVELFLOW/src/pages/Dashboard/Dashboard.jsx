@@ -44,13 +44,15 @@ import {
   TableChart as ExcelIcon,
   Notifications as NotificationsIcon,
   TrendingUp as TrendingUpIcon,
-  Place as PlaceIcon
+  Place as PlaceIcon,
+  ShowChart as ChartIcon,
+  Receipt as ReceiptIcon
 } from '@mui/icons-material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Area, AreaChart } from 'recharts';
 
 import voucherService from '../../services/voucherService.js';
 import dashboardService from '../../services/dashboardService.js';
@@ -65,7 +67,7 @@ export default function Dashboard() {
     search: '',
     startDate: null,
     endDate: null,
-    destination: ''
+    destination: 'Todos'
   });
   const [destinations, setDestinations] = useState([]);
   const [stats, setStats] = useState({
@@ -81,6 +83,7 @@ export default function Dashboard() {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [notificationAnchor, setNotificationAnchor] = useState(null);
+  const [monthlySales, setMonthlySales] = useState([]);
 
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
@@ -91,6 +94,12 @@ export default function Dashboard() {
     loadTopDestinations();
     loadNotifications();
   }, []);
+
+  useEffect(() => {
+    if (soldTrips.length > 0) {
+      calculateMonthlySales();
+    }
+  }, [soldTrips]);
 
   const loadVouchers = async () => {
     setLoading(true);
@@ -155,6 +164,29 @@ export default function Dashboard() {
       .slice(0, 5);
 
     setTopDestinations(topDest);
+  };
+
+  const calculateMonthlySales = () => {
+    const monthlyData = {};
+    
+    soldTrips.forEach(voucher => {
+      const month = dayjs(voucher.saleDate).format('MMM/YY');
+      if (!monthlyData[month]) {
+        monthlyData[month] = { month, vendas: 0, receita: 0 };
+      }
+      monthlyData[month].vendas += 1;
+      monthlyData[month].receita += voucher.totalValue;
+    });
+
+    const sortedData = Object.values(monthlyData)
+      .sort((a, b) => {
+        const dateA = dayjs(a.month, 'MMM/YY');
+        const dateB = dayjs(b.month, 'MMM/YY');
+        return dateA.isBefore(dateB) ? -1 : 1;
+      })
+      .slice(-6); // Last 6 months
+
+    setMonthlySales(sortedData);
   };
 
 
@@ -253,7 +285,7 @@ export default function Dashboard() {
       );
     }
 
-    if (filters.destination) {
+    if (filters.destination && filters.destination !== 'Todos') {
       result = result.filter(voucher =>
         voucher.voucherTrips.some(voucherTrip => voucherTrip.trip.destination === filters.destination)
       );
@@ -278,7 +310,7 @@ export default function Dashboard() {
       search: '',
       startDate: null,
       endDate: null,
-      destination: ''
+      destination: 'Todos'
     });
     setPage(0);
   };
@@ -453,18 +485,18 @@ export default function Dashboard() {
       </Grid>
 
 
-      {/* Top Destinations Section */}
+      {/* Charts Section */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12}>
-          <Paper elevation={3} sx={{ p: 3 }}>
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} sx={{ p: 5, height: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
               <TrendingUpIcon sx={{ mr: 1, color: 'primary.main', fontSize: 28 }} />
-              <Typography variant="h5" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" color="text.primary">
                 Destinos Mais Vendidos
               </Typography>
             </Box>
             {topDestinations.length > 0 ? (
-              <ResponsiveContainer width="100%" height={350}>
+              <ResponsiveContainer width={400} height={350}>
                 <BarChart data={topDestinations} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
@@ -491,17 +523,16 @@ export default function Dashboard() {
           </Paper>
         </Grid>
 
-
-        <Grid item xs={12}>
-          <Paper elevation={3} sx={{ p: 3 }}>
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} sx={{ p: 5, height: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
               <PlaceIcon sx={{ mr: 1, color: 'primary.main', fontSize: 28 }} />
-              <Typography variant="h5" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" color="text.primary">
                 Distribuição de Destinos
               </Typography>
             </Box>
             {topDestinations.length > 0 ? (
-              <ResponsiveContainer width="100%" height={350}>
+              <ResponsiveContainer width={400} height={350}>
                 <PieChart>
                   <Pie
                     data={topDestinations}
@@ -527,11 +558,66 @@ export default function Dashboard() {
             )}
           </Paper>
         </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} sx={{ p: 5, height: '100%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <ChartIcon sx={{ mr: 1, color: 'success.main', fontSize: 28 }} />
+              <Typography variant="h5" fontWeight="bold" color="text.primary">
+                Evolução Mensal de Vendas
+              </Typography>
+            </Box>
+            {monthlySales.length > 0 ? (
+              <ResponsiveContainer width={400} height={350}>
+                <AreaChart data={monthlySales} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                  <defs>
+                    <linearGradient id="colorVendas" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorReceita" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" style={{ fontSize: '14px' }} />
+                  <YAxis yAxisId="left" style={{ fontSize: '14px' }} />
+                  <YAxis yAxisId="right" orientation="right" style={{ fontSize: '14px' }} />
+                  <Tooltip contentStyle={{ fontSize: '14px' }} />
+                  <Legend wrapperStyle={{ fontSize: '14px' }} />
+                  <Area
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="vendas"
+                    stroke="#8884d8"
+                    fillOpacity={1}
+                    fill="url(#colorVendas)"
+                    name="Vendas"
+                  />
+                  <Area
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="receita"
+                    stroke="#82ca9d"
+                    fillOpacity={1}
+                    fill="url(#colorReceita)"
+                    name="Receita (R$)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 350 }}>
+                <Typography color="textSecondary" variant="h6">Nenhum dado disponível</Typography>
+              </Box>
+            )}
+          </Paper>
+        </Grid>
       </Grid>
 
       {/* Filtros */}
       <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom color="text.primary">
           Filtros
         </Typography>
 
@@ -571,7 +657,7 @@ export default function Dashboard() {
             </LocalizationProvider>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid item xs={12} sm={6} md={3}>
             <FormControl fullWidth>
               <InputLabel>Destino</InputLabel>
               <Select
@@ -580,7 +666,7 @@ export default function Dashboard() {
                 onChange={handleFilterChange}
                 label="Destino"
               >
-                <MenuItem value="">Todos</MenuItem>
+                <MenuItem value="Todos">Todos</MenuItem>
                 {destinations.map((destination) => (
                   <MenuItem key={destination} value={destination}>
                     {destination}
@@ -604,7 +690,7 @@ export default function Dashboard() {
 
       {/* Tabela de vendas */}
       <Paper elevation={3} sx={{ p: 3 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom color="text.primary">
           Vendas Realizadas
         </Typography>
 
