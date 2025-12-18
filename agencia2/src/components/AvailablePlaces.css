@@ -1,0 +1,126 @@
+.available-places {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.available-places h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  position: relative;
+}
+
+.available-places h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background-color: #007bff;
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  place-items: center;
+}
+
+.place-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 350px;
+}
+
+.place-card:hover {
+  transform: translateY(-5px);
+}
+
+.place-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: white;
+}
+
+.place-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.place-image h3, .place-image p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+.place-image h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.place-image p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.place-info {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+}
+
+.icon {
+  font-size: 1.2rem;
+}
+
+.saiba-mais {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.saiba-mais:hover {
+  background-color: #0056b3;
+}

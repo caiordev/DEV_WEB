@@ -1,0 +1,18 @@
+/* WhyChooseUs.css */
+.why-choose-section {
+  position: relative;
+}
+
+.why-choose-section .card-hover-effect {
+  transition: all 0.4s ease;
+}
+
+.why-choose-section .card-hover-effect:hover {
+  transform: translateY(-10px);
+}
+
+@media (max-width: 768px) {
+  .why-choose-section .cards-container {
+    flex-direction: column;
+  }
+}
